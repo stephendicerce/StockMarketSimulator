@@ -1,0 +1,35 @@
+<html>
+  <head><title>Company Query Page</title></head>
+  <body>
+    <button OnClick="list()">List</button>
+    <button OnClick="query()">Query</button>
+    <button OnClick="simulate()">Try to Buy!</button>
+    <div id="responseField"></div>
+    <script>
+      function list() {
+        var xmlHttp = new XMLHttpRequest();
+        var url = location.origin + "/csc435hw1/companies?list=true";
+        xmlHttp.open( "GET", url, false ); // false for synchronous request
+        xmlHttp.send( null );
+        var res = xmlHttp.responseText;
+        document.getElementById("responseField").innerHTML = res;
+      }
+      function query() {
+        var name = prompt("Enter the name of the company you wish to learn about:");
+        if(name != null) {
+          var xmlHttp = new XMLHttpRequest();
+          var url = location.origin + "/csc435hw1/companies?name=" + name;
+          xmlHttp.open( "GET", url, false ); // false for synchronous request
+          xmlHttp.send( null );
+          var res = xmlHttp.responseText;
+          document.getElementById("responseField").innerHTML = res;
+        }
+      }
+      function simulate() {
+        var name = prompt("Enter a name:");
+        var url = location.origin + "/csc435hw1/login?name=" + name;
+        window.location.replace(url);
+      }
+    </script>
+  </body>
+</html>
