@@ -19,11 +19,22 @@ To run the application, you must have MySQL running on port 3306 of the same mac
         PRIMARY KEY (name)
     );
     CREATE TABLE Stocks (
-        name VARCHAR(40),
+        user VARCHAR(40),
         company VARCHAR(40),
         number INT,
-        PRIMARY KEY (name, company)
+        PRIMARY KEY (user, company)
     );
+    GRANT ALL ON stocksim.* TO 'stocksimuser' IDENTIFIED BY 'stocksimpassword';
+    INSERT INTO Companies VALUES('Company0', 50, 100);
+    INSERT INTO Companies VALUES('Company1', 50, 100);
+    INSERT INTO Companies VALUES('Company2', 50, 100);
+    INSERT INTO Companies VALUES('Company3', 50, 100);
+    INSERT INTO Companies VALUES('Company4', 50, 100);
+    INSERT INTO Companies VALUES('Company5', 50, 100);
+    INSERT INTO Companies VALUES('Company6', 50, 100);
+    INSERT INTO Companies VALUES('Company7', 50, 100);
+    INSERT INTO Companies VALUES('Company8', 50, 100);
+    INSERT INTO Companies VALUES('Company9', 50, 100);
 ```
 
 Once the SQL database has been set up, run the application.
