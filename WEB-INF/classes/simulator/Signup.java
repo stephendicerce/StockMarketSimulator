@@ -20,8 +20,8 @@ public class Signup extends HttpServlet {
 	String pass = req.getParameter("pass");
 	
 	boolean userNameAvailable = true;
+	Connection conn = DBConnector.getConnection();
 	try {
-	    Connection conn = DBConnector.getConnection();
 	    Statement statement = conn.createStatement();
 	    ResultSet rs = statement.executeQuery("SELECT * FROM Users WHERE name='" + name + "'");
 	    while(rs.next()) {
@@ -29,11 +29,19 @@ public class Signup extends HttpServlet {
 	    }
 	} catch(SQLException | NullPointerException e) {
 	    
+	} finally {
+	    if(conn != null) {
+		try {
+		    conn.close();
+		} catch(SQLException e) {
+		    
+		}
+	    }
 	}
 
 	if(userNameAvailable) { // create user
+	    conn = DBConnector.getConnection();
 	    try {
-		Connection conn = DBConnector.getConnection();
 		Statement statement = conn.createStatement();
 		statement.executeUpdate("INSERT INTO Users Values('"
 						      + name + "', '"
@@ -53,6 +61,14 @@ public class Signup extends HttpServlet {
 		dispatcher.forward(req,res);
 	    } catch(SQLException | NullPointerException e) {
 		
+	    } finally {
+		if(conn != null) {
+		    try {
+			conn.close();
+		    } catch(SQLException e) {
+			
+		    }
+		}
 	    }
 	} else { // Username taken
 	    String json = "{ \"login_status\" : false }";

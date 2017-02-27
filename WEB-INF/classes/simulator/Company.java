@@ -17,10 +17,13 @@ public class Company {
 
     public static Company[] getCompanies() {
 	ArrayList<Company> companies = new ArrayList<>();
+	Connection conn = null;
+	Statement statement = null;
+	ResultSet rs = null;
 	try {
-	    Connection conn = DBConnector.getConnection();
-	    Statement statement = conn.createStatement();
-	    ResultSet rs = statement.executeQuery("SELECT * FROM Companies;");
+	    conn = DBConnector.getConnection();
+	    statement = conn.createStatement();
+	    rs = statement.executeQuery("SELECT * FROM Companies;");
 	    while(rs.next()) {
 		String n = rs.getString("name");
 		double sv = rs.getDouble("stockValue");
@@ -30,14 +33,21 @@ public class Company {
 	    return companies.toArray(new Company[companies.size()]);
 	} catch(SQLException | NullPointerException e) {
 	    return null;
+	} finally {
+	    try { rs.close(); } catch(SQLException | NullPointerException e) { }
+	    try { statement.close(); } catch(SQLException | NullPointerException e) { }
+	    try { conn.close(); } catch(SQLException | NullPointerException e) { }
 	}
     }
     
     public static Company getCompany(String name) {
+	Connection conn = null;
+	Statement statement = null;
+	ResultSet rs = null;
 	try {
-	    Connection conn = DBConnector.getConnection();
-	    Statement statement = conn.createStatement();
-	    ResultSet rs = statement.executeQuery("SELECT * FROM Companies WHERE name='"
+	    conn = DBConnector.getConnection();
+	    statement = conn.createStatement();
+	    rs = statement.executeQuery("SELECT * FROM Companies WHERE name='"
 						  + name + "';");
 	    if(rs.next()) {
 		double sv = rs.getDouble("stockValue");
@@ -45,6 +55,11 @@ public class Company {
 		return new Company(name, sv, as);
 	    }
 	} catch(SQLException | NullPointerException e) {
+	    
+	} finally {
+	    try { rs.close(); } catch(SQLException | NullPointerException e) { }
+	    try { statement.close(); } catch(SQLException | NullPointerException e) { }
+	    try { conn.close(); } catch(SQLException | NullPointerException e) { }
 	}
 	return null;
     }
@@ -88,10 +103,12 @@ public class Company {
 	    stockValue = oldValue;
     }
 
-        public boolean saveData() {
+    public boolean saveData() {
+	Connection conn = null;
+	Statement statement = null;
 	try {
-	    Connection conn = DBConnector.getConnection();
-	    Statement statement = conn.createStatement();
+	    conn = DBConnector.getConnection();
+	    statement = conn.createStatement();
 	    statement.executeUpdate("UPDATE Companies SET "
 				    + "stockValue=" + stockValue + ", "
 				    + "availableStocks=" + stocksAvailable + " "
@@ -100,7 +117,9 @@ public class Company {
 	    return true;
 	} catch(SQLException | NullPointerException e) {
 	    return false;
+	} finally {
+	    try { statement.close(); } catch(SQLException | NullPointerException e) { }
+	    try { conn.close(); } catch(SQLException | NullPointerException e) { }
 	}
     }
-    
 }

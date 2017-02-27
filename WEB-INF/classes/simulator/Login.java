@@ -20,8 +20,9 @@ public class Login extends HttpServlet {
 	String pass = req.getParameter("pass");
 	
 	User user = null;
+	
+	Connection conn = DBConnector.getConnection();
 	try {
-	    Connection conn = DBConnector.getConnection();
 	    Statement statement = conn.createStatement();
 	    ResultSet rs = statement.executeQuery("SELECT * FROM Users WHERE name='" + name + "' AND password='" + pass + "'");
 	    if(rs.next()) {
@@ -31,6 +32,14 @@ public class Login extends HttpServlet {
 	    }
 	} catch(SQLException | NullPointerException e) {
 	    user = null;
+	} finally {
+	    if(conn != null) {
+		try {
+		    conn.close();
+		} catch(SQLException e) {
+		    
+		}
+	    }
 	}
 	
 	String json;

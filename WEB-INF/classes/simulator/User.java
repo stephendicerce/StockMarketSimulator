@@ -5,7 +5,7 @@ import java.lang.NullPointerException;
 import java.sql.*;
 
 public class User {
-    public static final double START_MONEY = 500;
+    public static final double START_MONEY = 5000;
     private String name;
     private double money;
     private HashMap<String, Integer> stocks;
@@ -13,10 +13,13 @@ public class User {
     public static User loadUser(String n) {
 	double m;
 	HashMap<String, Integer> s = new HashMap<>();
+	Connection conn = null;
+	Statement statement = null;
+	ResultSet rs = null;
 	try {
-	    Connection conn = DBConnector.getConnection();
-	    Statement statement = conn.createStatement();
-	    ResultSet rs = statement.executeQuery("SELECT * FROM Users WHERE name='" + n + "'");
+	    conn = DBConnector.getConnection();
+	    statement = conn.createStatement();
+	    rs = statement.executeQuery("SELECT * FROM Users WHERE name='" + n + "'");
 	    if(rs.next()) {
 		m = rs.getDouble("money");
 	    } else {
@@ -24,12 +27,16 @@ public class User {
 	    }
 	} catch(SQLException | NullPointerException e) {
 	    return null;
+	} finally {
+	    try { rs.close(); } catch(SQLException | NullPointerException e) { }
+	    try { statement.close(); } catch(SQLException | NullPointerException e) { }
+	    try { conn.close(); } catch(SQLException | NullPointerException e) { }
 	}
-	
+
 	try {
-	    Connection conn = DBConnector.getConnection();
-	    Statement statement = conn.createStatement();
-	    ResultSet rs = statement.executeQuery("SELECT * FROM Stocks WHERE user='" + n + "'");
+	    conn = DBConnector.getConnection();
+	    statement = conn.createStatement();
+	    rs = statement.executeQuery("SELECT * FROM Stocks WHERE user='" + n + "'");
 	    while(rs.next()) {
 		String company = rs.getString("company");
 		int stocks = rs.getInt("number");
@@ -39,6 +46,10 @@ public class User {
 		
 	} catch(SQLException | NullPointerException e) {
 	    return null;
+	} finally {
+	    try { rs.close(); } catch(SQLException | NullPointerException e) { }
+	    try { statement.close(); } catch(SQLException | NullPointerException e) { }
+	    try { conn.close(); } catch(SQLException | NullPointerException e) { }
 	}
     }
     
@@ -109,9 +120,11 @@ public class User {
     }
 
     public boolean saveData() {
+	Connection conn = null;
+	Statement statement = null;
 	try {
-	    Connection conn = DBConnector.getConnection();
-	    Statement statement = conn.createStatement();
+	    conn = DBConnector.getConnection();
+	    statement = conn.createStatement();
 	    statement.executeUpdate("UPDATE Users SET "
 				    + "money=" + money + " "
 				    + "WHERE name='" + name + "'"
@@ -128,6 +141,9 @@ public class User {
 	    return true;
 	} catch(SQLException | NullPointerException e) {
 	    return false;
+	} finally {
+	    try { statement.close(); } catch(SQLException | NullPointerException e) { }
+	    try { conn.close(); } catch(SQLException | NullPointerException e) { }
 	}
     }
 }
