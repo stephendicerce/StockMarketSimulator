@@ -9,7 +9,8 @@ public class DBConnector {
     	try {  
 	    Class.forName("com.mysql.jdbc.Driver");  
 	    conn = DriverManager.getConnection(  
-	       "jdbc:mysql://localhost:3306/test","testUser","testPass"
+					       "jdbc:mysql://localhost:3306/stocksim"
+					       ,"stocksimuser","stocksimpassword"
 	    );
 	} catch(SQLException | ClassNotFoundException e) {
 	    return null;
