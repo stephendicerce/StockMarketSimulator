@@ -1,38 +1,99 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <web-app version="3.0"> 
-   <!-- To save as "hello\WEB-INF\web.xml" -->
+  <!-- To save as "hello\WEB-INF\web.xml" -->
+
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
  
    <servlet>
-      <servlet-name>servlet1</servlet-name>
-      <servlet-class>Companies</servlet-class>
+      <servlet-name>companiesServlet</servlet-name>
+      <servlet-class>simulator.Companies</servlet-class>
    </servlet>
- 
-   <!-- Note: All <servlet> elements MUST be grouped together and
-         placed IN FRONT of the <servlet-mapping> elements -->
- 
+  
    <servlet-mapping>
-      <servlet-name>servlet1</servlet-name>
+      <servlet-name>companiesServlet</servlet-name>
       <url-pattern>/companies</url-pattern>
    </servlet-mapping>
    
    <servlet>
-     <servlet-name>servlet2</servlet-name>
-     <servlet-class>Login</servlet-class>
+     <servlet-name>loginServlet</servlet-name>
+     <servlet-class>simulator.Login</servlet-class>
    </servlet>
    
    <servlet-mapping>
-      <servlet-name>servlet2</servlet-name>
+      <servlet-name>loginServlet</servlet-name>
       <url-pattern>/login</url-pattern>
    </servlet-mapping>
 
    <servlet>
      <servlet-name>servlet3</servlet-name>
-     <servlet-class>Simulate</servlet-class>
+     <servlet-class>simulator.Simulate</servlet-class>
    </servlet>
    
    <servlet-mapping>
      <servlet-name>servlet3</servlet-name>
      <url-pattern>/simulate</url-pattern>
+   </servlet-mapping>
+
+   <servlet>
+     <servlet-name>signUpServlet</servlet-name>
+     <servlet-class>simulator.Signup</servlet-class>
+   </servlet>
+   
+   <servlet-mapping>
+      <servlet-name>signUpServlet</servlet-name>
+      <url-pattern>/signup</url-pattern>
+   </servlet-mapping>
+
+   <servlet>
+     <servlet-name>stockUpdateServlet</servlet-name>
+     <servlet-class>simulator.StockUpdate</servlet-class>
+   </servlet>
+   
+   <servlet-mapping>
+      <servlet-name>stockUpdateServlet</servlet-name>
+      <url-pattern>/marketUpdate</url-pattern>
+   </servlet-mapping>
+   
+   <servlet>
+     <servlet-name>stockmarket</servlet-name>
+     <jsp-file>/stockMarket.jsp</jsp-file>
+   </servlet>
+   
+   <servlet-mapping>
+     <servlet-name>stockmarket</servlet-name>
+     <url-pattern>/stockMarket</url-pattern>
+   </servlet-mapping>
+
+   <servlet>
+     <servlet-name>dashboard</servlet-name>
+     <jsp-file>/dashboard.jsp</jsp-file>
+   </servlet>
+   
+   <servlet-mapping>
+     <servlet-name>dashboard</servlet-name>
+     <url-pattern>/dashboard</url-pattern>
+   </servlet-mapping>
+
+   <servlet>
+     <servlet-name>timeout</servlet-name>
+     <jsp-file>/timeout.jsp</jsp-file>
+   </servlet>
+   
+   <servlet-mapping>
+     <servlet-name>timeout</servlet-name>
+     <url-pattern>/timeout</url-pattern>
+   </servlet-mapping>
+   
+   <servlet>
+     <servlet-name>error</servlet-name>
+     <jsp-file>/error.jsp</jsp-file>
+   </servlet>
+   
+   <servlet-mapping>
+     <servlet-name>error</servlet-name>
+     <url-pattern>/error</url-pattern>
    </servlet-mapping>
    
 </web-app>
