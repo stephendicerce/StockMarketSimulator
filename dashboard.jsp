@@ -20,8 +20,8 @@
     <button OnClick="enterStockMarket()">Stock Market</button>
     <script>
       function enterStockMarket() {
-      var url = location.origin + "/StockMarketSimulator/stockMarket";
-      window.location.replace(url);
+        var url = location.origin + "/StockMarketSimulator/stockMarket";
+        window.location.replace(url);
       }
     </script>
   </body>

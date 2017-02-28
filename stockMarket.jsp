@@ -54,15 +54,15 @@
 	<li>
 	  <b> <% out.print(cname); %> </b>
 	  &nbsp&nbsp&nbsp Stock Price:
-	  <span id=<% out.print(cname + "price"); %> >
+	  <span id=<% out.print("\"" + cname + "price\""); %> >
 	    <!-- <% out.print(String.format("%.2f", c.getStockValue())); %> -->
 	  </span>
 	  <br/>
 	  Number Available:
-	  <span id=<% out.print(cname + "available"); %> >
+	  <span id=<% out.print("\"" + cname + "available\""); %> >
 	    <!-- <% out.print(c.getNumberOfAvailableStocks()); %> -->
 	  </span>
-	  <br/> Number Owned: <span id=<% out.print(cname + "owned"); %> >
+	  <br/> Number Owned: <span id=<% out.print("\"" + cname + "owned\""); %> >
 	    <!-- <% out.print(owned); %> -->
 	  </span>
 	  <br/>
