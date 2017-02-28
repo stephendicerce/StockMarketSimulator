@@ -3,16 +3,30 @@ package simulator;
 import java.util.ArrayList;
 import java.sql.*;
 import java.lang.NullPointerException;
+import org.json.JSONObject;
+import org.json.JSONArray;
 
 public class Company {
     private String name;
+    private String symbol;
     private double stockValue;
     private int stocksAvailable;
 	
-    public Company(String n, double sv, int as) {
+    public Company(String n, String sym, double sv, int as) {
 	name = n;
+	symbol = sym;
 	stockValue = sv;
 	stocksAvailable = as;
+    }
+
+    // Pull from the google stock API to update prices
+    public static void updatePrices() {
+        Company[] companies = Company.getCompanies();
+	String[] symbols = new String[companies.length];
+	for(int i=0; i<companies.length; ++i) {
+	    symbols[i] = companies[i].getSymbol();
+	}
+	StockReader.updateStocks(symbols);
     }
 
     public static Company[] getCompanies() {
@@ -26,9 +40,10 @@ public class Company {
 	    rs = statement.executeQuery("SELECT * FROM Companies;");
 	    while(rs.next()) {
 		String n = rs.getString("name");
+		String sym = rs.getString("symbol");
 		double sv = rs.getDouble("stockValue");
 		int as = rs.getInt("availableStocks");
-		companies.add(new Company(n, sv, as));
+		companies.add(new Company(n, sym, sv, as));
 	    }
 	    return companies.toArray(new Company[companies.size()]);
 	} catch(SQLException | NullPointerException e) {
@@ -50,9 +65,10 @@ public class Company {
 	    rs = statement.executeQuery("SELECT * FROM Companies WHERE name='"
 						  + name + "';");
 	    if(rs.next()) {
+		String sym = rs.getString("symbol");
 		double sv = rs.getDouble("stockValue");
 		int as = rs.getInt("availableStocks");
-		return new Company(name, sv, as);
+		return new Company(name, sym, sv, as);
 	    }
 	} catch(SQLException | NullPointerException e) {
 	    
@@ -66,6 +82,10 @@ public class Company {
 
     public String getName() {
 	return name;
+    }
+
+    public String getSymbol() {
+	return symbol;
     }
 
     public double getStockValue() {

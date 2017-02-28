@@ -39,25 +39,6 @@ public class User {
 	    try { statement.close(); } catch(SQLException | NullPointerException e) { }
 	    try { conn.close(); } catch(SQLException | NullPointerException e) { }
 	}
-
-	// try {
-	//     conn = DBConnector.getConnection();
-	//     statement = conn.createStatement();
-	//     rs = statement.executeQuery("SELECT * FROM Stocks WHERE user='" + n + "'");
-	//     while(rs.next()) {
-	// 	String company = rs.getString("company");
-	// 	int stocks = rs.getInt("number");
-	// 	s.put(company, stocks);
-	//     }
-	//     return new User(n, m, s);
-		
-	// } catch(SQLException | NullPointerException e) {
-	//     return null;
-	// } finally {
-	//     try { rs.close(); } catch(SQLException | NullPointerException e) { }
-	//     try { statement.close(); } catch(SQLException | NullPointerException e) { }
-	//     try { conn.close(); } catch(SQLException | NullPointerException e) { }
-	// }
     }
     
     public User(String n, double m, HashMap<String, Integer> s) {

@@ -47,6 +47,7 @@ public class Login extends HttpServlet {
 	    HttpSession session = req.getSession();
 	    session.setMaxInactiveInterval(30);
 	    session.setAttribute("user", user);
+	    Company.updatePrices();
 	} else {
 	    json = "{ \"login_status\" : false }";
 	}
