@@ -14,6 +14,7 @@ To run the application, you must have MySQL running on port 3306 of the same mac
     );
     CREATE TABLE Companies (
         name VARCHAR(40),
+        symbol VARCHAR(10),
         stockValue DOUBLE PRECISION,
         availableStocks INT,
         PRIMARY KEY (name)
@@ -25,16 +26,12 @@ To run the application, you must have MySQL running on port 3306 of the same mac
         PRIMARY KEY (user, company)
     );
     GRANT ALL ON stocksim.* TO 'stocksimuser' IDENTIFIED BY 'stocksimpassword';
-    INSERT INTO Companies VALUES('Company0', 50, 100);
-    INSERT INTO Companies VALUES('Company1', 50, 100);
-    INSERT INTO Companies VALUES('Company2', 50, 100);
-    INSERT INTO Companies VALUES('Company3', 50, 100);
-    INSERT INTO Companies VALUES('Company4', 50, 100);
-    INSERT INTO Companies VALUES('Company5', 50, 100);
-    INSERT INTO Companies VALUES('Company6', 50, 100);
-    INSERT INTO Companies VALUES('Company7', 50, 100);
-    INSERT INTO Companies VALUES('Company8', 50, 100);
-    INSERT INTO Companies VALUES('Company9', 50, 100);
+    INSERT INTO Companies VALUES('Allstate', 'ALL', 50, 100);
+    INSERT INTO Companies VALUES('American Express', 'AXP', 50, 100);
+    INSERT INTO Companies VALUES('Apple Inc.', 'AAPL', 50, 100);
+    INSERT INTO Companies VALUES('Google', 'GOOG', 50, 100);
+    INSERT INTO Companies VALUES('McDonalds', 'MCD', 50, 100);
+    INSERT INTO Companies VALUES('Microsoft', 'MSFT', 50, 100);
 ```
 
 Once the SQL database has been set up, run the application.
