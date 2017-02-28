@@ -35,3 +35,5 @@ To run the application, you must have MySQL running on port 3306 of the same mac
 ```
 
 Once the SQL database has been set up, run the application.
+
+Currently, stock prices are updated on login, and are drawn from Google finance api.
