@@ -13,13 +13,11 @@ public class User {
     public static User loadUser(String n) {
 	double m;
 	HashMap<String, Integer> s = new HashMap<>();
-	Connection conn = null;
-	Statement statement = null;
-	ResultSet rs = null;
-	try {
-	    conn = DBConnector.getConnection();
-	    statement = conn.createStatement();
-	    rs = statement.executeQuery("SELECT * FROM Users WHERE name='" + n + "'");
+	try (
+	     Connection conn = DBConnector.getConnection();
+	     Statement statement = conn.createStatement();
+	     ) {
+	    ResultSet rs = statement.executeQuery("SELECT * FROM Users WHERE name='" + n + "'");
 	    if(rs.next()) {
 		m = rs.getDouble("money");
 		rs = statement.executeQuery("SELECT * FROM Stocks WHERE user='" + n + "'");
@@ -34,10 +32,6 @@ public class User {
 	    }
 	} catch(SQLException | NullPointerException e) {
 	    return null;
-	} finally {
-	    try { rs.close(); } catch(SQLException | NullPointerException e) { }
-	    try { statement.close(); } catch(SQLException | NullPointerException e) { }
-	    try { conn.close(); } catch(SQLException | NullPointerException e) { }
 	}
     }
     
@@ -108,11 +102,10 @@ public class User {
     }
 
     public boolean saveData() {
-	Connection conn = null;
-	Statement statement = null;
-	try {
-	    conn = DBConnector.getConnection();
-	    statement = conn.createStatement();
+	try (
+	     Connection conn = DBConnector.getConnection();
+	     Statement statement = conn.createStatement();
+	     ) {
 	    statement.executeUpdate("UPDATE Users SET "
 				    + "money=" + money + " "
 				    + "WHERE name='" + name + "'"
@@ -129,9 +122,6 @@ public class User {
 	    return true;
 	} catch(SQLException | NullPointerException e) {
 	    return false;
-	} finally {
-	    try { statement.close(); } catch(SQLException | NullPointerException e) { }
-	    try { conn.close(); } catch(SQLException | NullPointerException e) { }
 	}
     }
 }

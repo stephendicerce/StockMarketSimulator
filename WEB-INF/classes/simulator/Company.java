@@ -31,13 +31,11 @@ public class Company {
 
     public static Company[] getCompanies() {
 	ArrayList<Company> companies = new ArrayList<>();
-	Connection conn = null;
-	Statement statement = null;
-	ResultSet rs = null;
-	try {
-	    conn = DBConnector.getConnection();
-	    statement = conn.createStatement();
-	    rs = statement.executeQuery("SELECT * FROM Companies;");
+        try (
+	     Connection conn = DBConnector.getConnection();
+	     Statement statement = conn.createStatement();
+	     ResultSet rs = statement.executeQuery("SELECT * FROM Companies;");
+	     ) {
 	    while(rs.next()) {
 		String n = rs.getString("name");
 		String sym = rs.getString("symbol");
@@ -48,36 +46,25 @@ public class Company {
 	    return companies.toArray(new Company[companies.size()]);
 	} catch(SQLException | NullPointerException e) {
 	    return null;
-	} finally {
-	    try { rs.close(); } catch(SQLException | NullPointerException e) { }
-	    try { statement.close(); } catch(SQLException | NullPointerException e) { }
-	    try { conn.close(); } catch(SQLException | NullPointerException e) { }
 	}
     }
     
     public static Company getCompany(String name) {
-	Connection conn = null;
-	Statement statement = null;
-	ResultSet rs = null;
-	try {
-	    conn = DBConnector.getConnection();
-	    statement = conn.createStatement();
-	    rs = statement.executeQuery("SELECT * FROM Companies WHERE name='"
-						  + name + "';");
+	try (
+	     Connection conn = DBConnector.getConnection();
+	     Statement statement = conn.createStatement();
+	     ResultSet rs = statement.executeQuery("SELECT * FROM Companies WHERE name='"+ name + "';");
+	     ) {
 	    if(rs.next()) {
 		String sym = rs.getString("symbol");
 		double sv = rs.getDouble("stockValue");
 		int as = rs.getInt("availableStocks");
 		return new Company(name, sym, sv, as);
-	    }
+	    } else 
+		return null;
 	} catch(SQLException | NullPointerException e) {
-	    
-	} finally {
-	    try { rs.close(); } catch(SQLException | NullPointerException e) { }
-	    try { statement.close(); } catch(SQLException | NullPointerException e) { }
-	    try { conn.close(); } catch(SQLException | NullPointerException e) { }
+	    return null;
 	}
-	return null;
     }
 
     public String getName() {
@@ -124,11 +111,10 @@ public class Company {
     }
 
     public boolean saveData() {
-	Connection conn = null;
-	Statement statement = null;
-	try {
-	    conn = DBConnector.getConnection();
-	    statement = conn.createStatement();
+	try (
+	     Connection conn = DBConnector.getConnection();
+	     Statement statement = conn.createStatement();
+	     ) {
 	    statement.executeUpdate("UPDATE Companies SET "
 				    + "stockValue=" + stockValue + ", "
 				    + "availableStocks=" + stocksAvailable + " "
@@ -137,9 +123,6 @@ public class Company {
 	    return true;
 	} catch(SQLException | NullPointerException e) {
 	    return false;
-	} finally {
-	    try { statement.close(); } catch(SQLException | NullPointerException e) { }
-	    try { conn.close(); } catch(SQLException | NullPointerException e) { }
 	}
     }
 }

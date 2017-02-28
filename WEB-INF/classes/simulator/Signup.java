@@ -20,28 +20,23 @@ public class Signup extends HttpServlet {
 	String pass = req.getParameter("pass");
 	
 	boolean userNameAvailable = true;
-	Connection conn = null;
-	Statement statement = null;
-	ResultSet rs = null;
-	try {
-	    conn = DBConnector.getConnection();
-	    statement = conn.createStatement();
-	    rs = statement.executeQuery("SELECT * FROM Users WHERE name='" + name + "'");
+	try (
+	     Connection conn = DBConnector.getConnection();
+	     Statement statement = conn.createStatement();
+	     ResultSet rs = statement.executeQuery("SELECT * FROM Users WHERE name='" + name + "'");
+	     ) {
 	    while(rs.next()) {
 		userNameAvailable = false;
 	    }
 	} catch(SQLException | NullPointerException e) {
 	    
-	} finally {
-	    try { rs.close(); } catch(SQLException | NullPointerException e) { }
-	    try { statement.close(); } catch(SQLException | NullPointerException e) { }
-	    try { conn.close(); } catch(SQLException | NullPointerException e) { }
 	}
 
 	if(userNameAvailable) { // create user
-	    try {
-		conn = DBConnector.getConnection();
-	        statement = conn.createStatement();
+	    try (
+		 Connection conn = DBConnector.getConnection();
+		 Statement statement = conn.createStatement();
+	     ) {
 		statement.executeUpdate("INSERT INTO Users Values('"
 						      + name + "', '"
 						      + pass + "', "
@@ -60,10 +55,6 @@ public class Signup extends HttpServlet {
 		dispatcher.forward(req,res);
 	    } catch(SQLException | NullPointerException e) {
 		
-	    } finally {
-		try { rs.close(); } catch(SQLException | NullPointerException e) { }
-		try { statement.close(); } catch(SQLException | NullPointerException e) { }
-		try { conn.close(); } catch(SQLException | NullPointerException e) { }
 	    }
 	} else { // Username taken
 	    String json = "{ \"login_status\" : false }";

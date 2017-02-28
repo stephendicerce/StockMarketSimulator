@@ -21,13 +21,11 @@ public class Login extends HttpServlet {
 	
 	User user = null;
 	
-	Connection conn = null;
-	Statement statement = null;
-	ResultSet rs = null;
-	try {
-	    conn = DBConnector.getConnection();
-	    statement = conn.createStatement();
-	    rs = statement.executeQuery("SELECT * FROM Users WHERE name='" + name + "' AND password='" + pass + "'");
+	try (
+	     Connection conn = DBConnector.getConnection();
+	     Statement statement = conn.createStatement();
+	     ResultSet rs = statement.executeQuery("SELECT * FROM Users WHERE name='" + name + "' AND password='" + pass + "'");
+	     ) {
 	    if(rs.next()) {
 		if(rs.getString("name").equals(name)
 		   && rs.getString("password").equals(pass))
@@ -35,10 +33,6 @@ public class Login extends HttpServlet {
 	    }
 	} catch(SQLException | NullPointerException e) {
 	    user = null;
-	} finally {
-	    try { rs.close(); } catch(SQLException | NullPointerException e) { }
-	    try { statement.close(); } catch(SQLException | NullPointerException e) { }
-	    try { conn.close(); } catch(SQLException | NullPointerException e) { }
 	}
 	
 	String json;
