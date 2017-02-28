@@ -26,12 +26,15 @@ To run the application, you must have MySQL running on port 3306 of the same mac
         PRIMARY KEY (user, company)
     );
     GRANT ALL ON stocksim.* TO 'stocksimuser' IDENTIFIED BY 'stocksimpassword';
+    INSERT INTO Companies VALUES('Advanced Micro Devices', 'AMD', 50, 100);
     INSERT INTO Companies VALUES('Allstate', 'ALL', 50, 100);
     INSERT INTO Companies VALUES('American Express', 'AXP', 50, 100);
     INSERT INTO Companies VALUES('Apple Inc.', 'AAPL', 50, 100);
     INSERT INTO Companies VALUES('Google', 'GOOG', 50, 100);
+    INSERT INTO Companies VALUES('Intel Corporation', 'INTC', 50, 100);
     INSERT INTO Companies VALUES('McDonalds', 'MCD', 50, 100);
     INSERT INTO Companies VALUES('Microsoft', 'MSFT', 50, 100);
+    INSERT INTO Companies VALUES('Ninetndo Co.', 'NTDOY', 50, 100);
 ```
 
 Once the SQL database has been set up, run the application.
