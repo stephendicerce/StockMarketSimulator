@@ -36,6 +36,8 @@ To run the application, you must have MySQL running on port 3306 of the same mac
     INSERT INTO Companies VALUES('Microsoft', 'MSFT', 50, 100);
     INSERT INTO Companies VALUES('Ninetndo Co.', 'NTDOY', 50, 100);
 ```
+Add the average price column to the stocks table and a value of 0 to all the inserts
+
 
 Once the SQL database has been set up, run the application.
 
