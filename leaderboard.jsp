@@ -42,15 +42,18 @@
   <body>
     <button OnClick='sendToDashboard()'>Dashboard</button>
     <h2>Leaderboard</h2>
-    <button OnClick='sortByAmountOfMoney()'>Money</button>
-    <button OnClick='sortByAverageStockPrice()'>Stocks</button>
+    <input type="radio" name="view" value="money" checked="true" OnClick='sortByAmountOfMoney()'>Money</input>
+    <input type="radio" name="view" value="stocks" OnClick='sortByAverageStockPrice()'>Stocks</input>
+
     <br>
     <br>
-    <select id=companySelector style="display:none" onchange="sortByAverageStockPrice()">
-      <% for (Company c : companies) {
-      out.println("<option value=\"" + c.getName() + "\">" + c.getName() + "</option>");
-     } %>
-    </select>
+    <span id=companySelectorSpan>Company:
+      <select id=companySelector onchange="sortByAverageStockPrice()">
+	<% for (Company c : companies) {
+	   out.println("<option value=\"" + c.getName() + "\">" + c.getName() + "</option>");
+	   } %>
+      </select>
+    </span>
     <br>
     <br>
     
@@ -65,7 +68,7 @@
       }
 
       function sortByAmountOfMoney() {
-        document.getElementById("companySelector").style.display = "none";
+        document.getElementById("companySelectorSpan").style.display = "none";
         var url = location.origin + "/StockMarketSimulator/leaderboardUpdate?sort=money";
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open("GET", url, false ); // false for a synchronous request
@@ -84,7 +87,7 @@
       }
 
       function sortByAverageStockPrice() {
-        document.getElementById("companySelector").style.display = "inline";
+        document.getElementById("companySelectorSpan").style.display = "inline";
         var company = document.getElementById("companySelector").value;
         var url = location.origin + "/StockMarketSimulator/leaderboardUpdate?sort=stocks&company=" + company;
         var xmlHttp = new XMLHttpRequest();
