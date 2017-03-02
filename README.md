@@ -23,6 +23,7 @@ To run the application, you must have MySQL running on port 3306 of the same mac
         user VARCHAR(40),
         company VARCHAR(40),
         number INT,
+        averagePrice DOUBLE PRECISION,
         PRIMARY KEY (user, company)
     );
     GRANT ALL ON stocksim.* TO 'stocksimuser' IDENTIFIED BY 'stocksimpassword';
