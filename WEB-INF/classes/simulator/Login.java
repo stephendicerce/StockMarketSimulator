@@ -39,7 +39,7 @@ public class Login extends HttpServlet {
 	if(user != null) {
 	    json = "{ \"login_status\" : true }";
 	    HttpSession session = req.getSession();
-	    session.setMaxInactiveInterval(30);
+	    session.setMaxInactiveInterval(5*60);
 	    session.setAttribute("user", user);
 	} else {
 	    json = "{ \"login_status\" : false }";
