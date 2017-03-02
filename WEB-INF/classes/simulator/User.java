@@ -89,6 +89,9 @@ public class User {
 	if(getNumberOfStocks(cname) > 0 && comp.sellStock()) {
 	    money += price;
 	    stocks.put(cname, getNumberOfStocks(cname) - 1);
+	    if (getNumberOfStocks(cname) == 0) {
+		averagePrices.put(cname, 0.0);
+	    }
 	    if(this.saveData())
 		return true;
 	    else {
@@ -137,6 +140,10 @@ public class User {
 	} catch(SQLException | NullPointerException e) {
 	    return false;
 	}
+    }
+
+    public double getAveragePriceBoughtAt(String cname) {
+	return averagePrices.get(cname);
     }
 }
     
