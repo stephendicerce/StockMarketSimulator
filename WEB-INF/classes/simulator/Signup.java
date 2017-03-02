@@ -47,6 +47,7 @@ public class Signup extends HttpServlet {
 		    statement.executeUpdate("INSERT INTO Stocks VALUES('"
 					    + name + "', '"
 					    + c.getName() + "', "
+					    + 0 + ", "
 					    + 0 + ")"
 					    );
 		}

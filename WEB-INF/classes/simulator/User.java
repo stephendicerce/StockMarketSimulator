@@ -9,10 +9,12 @@ public class User {
     private String name;
     private double money;
     private HashMap<String, Integer> stocks;
+    private HashMap<String, Double> averagePrices;
 
     public static User loadUser(String n) {
-	double m;
+	double m, p;
 	HashMap<String, Integer> s = new HashMap<>();
+	HashMap<String, Double> ap = new HashMap<>();
 	try (
 	     Connection conn = DBConnector.getConnection();
 	     Statement statement = conn.createStatement();
@@ -24,23 +26,26 @@ public class User {
 		while(rs.next()) {
 		    String company = rs.getString("company");
 		    int stocks = rs.getInt("number");
+		    double aPrice = rs.getDouble("averagePrice");
 		    s.put(company, stocks);
+		    ap.put(company, aPrice);
 		}
-		return new User(n, m, s);
+		return new User(n, m, s, ap);
 	    } else {
 		return null;
 	    }
-	} catch(SQLException | NullPointerException e) {
+	    } catch(SQLException | NullPointerException e) {
 	    return null;
 	}
     }
     
-    public User(String n, double m, HashMap<String, Integer> s) {
+    public User(String n, double m, HashMap<String, Integer> s, HashMap<String, Double> a) {
 	name = n;
 	money = m;
 	stocks = s;
+	averagePrices = a;
     }
-
+    
     public int getNumberOfStocks(String cname) {
 	Integer n = stocks.get(cname);
 	return (n == null) ? 0 : (int)n;
@@ -57,12 +62,19 @@ public class User {
     public boolean purchaseStock(String cname) throws NullPointerException {
 	Company comp = Company.getCompany(cname);
 	double price = comp.getStockValue();
+	double newAverage, avPrice;
+	int numberOfStocks = getNumberOfStocks(cname);
 	if(price <= money && comp.buyStock()) {
 	    money -= price;
+	    avPrice = averagePrices.get(cname);
+            newAverage = (((avPrice * numberOfStocks) + price) / (numberOfStocks + 1));
+            averagePrices.put(cname, newAverage);
 	    stocks.put(cname, getNumberOfStocks(cname) + 1);
+            
 	    if(this.saveData())
 		return true;
 	    else {
+		averagePrices.put(cname, avPrice);
 	    	money += price;
 	    	stocks.put(cname, getNumberOfStocks(cname) - 1);
 	    	comp.sellStock();
@@ -77,6 +89,9 @@ public class User {
 	if(getNumberOfStocks(cname) > 0 && comp.sellStock()) {
 	    money += price;
 	    stocks.put(cname, getNumberOfStocks(cname) - 1);
+	    if (getNumberOfStocks(cname) == 0) {
+		averagePrices.put(cname, 0.0);
+	    }
 	    if(this.saveData())
 		return true;
 	    else {
@@ -113,8 +128,10 @@ public class User {
 	    Company[] companies = Company.getCompanies();
 	    for(Company c : companies) {
 		int stocks = getNumberOfStocks(c.getName());
+		double averagePrice = averagePrices.get(c.getName());
 		statement.executeUpdate("UPDATE Stocks SET "
-					+ "number=" + stocks + " "
+					+ "number=" + stocks + ", "
+					+ "averagePrice=" + averagePrice + " "
 					+ "WHERE user='" + name + "'"
 					+ "AND company='" + c.getName() + "'"
 					);
@@ -124,4 +141,9 @@ public class User {
 	    return false;
 	}
     }
+
+    public double getAveragePriceBoughtAt(String cname) {
+	return averagePrices.get(cname);
+    }
 }
+    

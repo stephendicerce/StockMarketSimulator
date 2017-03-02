@@ -58,13 +58,8 @@
 
    <servlet>
      <servlet-name>leaderboardServlet</servlet-name>
-     <servlet-class>simulator.Leaderboard</servlet-class>
-   </servlet>
-
-   <servlet-mapping>
-     <servlet-name>leaderboardServlet</servlet-name>
      <url-pattern>/leaderboardUpdate</url-pattern>
-   </servlet-mapping>
+   </servlet>
 
    <servlet>
      <servlet-name>stockmarket</servlet-name>
