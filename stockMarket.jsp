@@ -1,5 +1,6 @@
 <%@ page import="simulator.*" %>
 <%
+   Company.updatePrices();
    User user = (User)session.getAttribute("user");
    Company[] companies = Company.getCompanies();
    if(user == null) { %>  
@@ -30,17 +31,18 @@
   </head>
   
   <body>
-    <button OnClick='sendToDashboard()'>Dashboard</button>
+    <button OnClick='sendToDashboard()'>Dashboard</button>&nbsp
+    Status: <span id=status></span>
     <h2>Welcome to the stock market, <% out.println(" " + user.getName() + "!"); %></h2>
     <h4>Balance: $
       <span id=balance>
-	<!-- <% out.print(String.format("%.2f", user.getMoney())); %> -->
+
       </Span>
     </h4>
     
     <h4>Stock Value: $
       <span id=stockValue>
-	<!-- <% out.print(String.format("%.2f", user.getStockValue())); %> -->
+
       </span>
     </h4>
     <br/>
@@ -77,6 +79,7 @@
       
       <script>
 	function act(company, action) {
+	  document.getElementById("status").innerHTML = "Requesting transaction...";
 	  var url = location.origin + "/StockMarketSimulator/simulate?action=" + action + "&company=" + company;
           var xmlHttp = new XMLHttpRequest();
           xmlHttp.open( "GET", url, false ); // false for synchronous request
@@ -84,9 +87,11 @@
 	  var response = JSON.parse(xmlHttp.responseText);
           var status = response.status;
           if(status == "success") {
-	    update();
+            update(false);
+	    document.getElementById("status").innerHTML = "Transaction successful!";
 	  } else {
 	    alert(status);
+            document.getElementById("status").innerHTML = "Transaction failed.";
 	    location.reload();
 	  }
 	}
@@ -98,8 +103,13 @@
 	
 	// Write a servlet to respond with JSON with all information for this page
 	// Then use this function to call it, and update the values of the page.
-	function update() {
+	//
+	// If updatePrices is true, updates the prices of stocks
+	function update(updatePrices) {
+	  document.getElementById("status").innerHTML = "Updating...";
           var url = location.origin + "/StockMarketSimulator/marketUpdate";
+	  if(updatePrices)
+	    url += "?prices=true";
           var xmlHttp = new XMLHttpRequest();
           xmlHttp.open( "GET", url, false ); // false for synchronous request
           xmlHttp.send( null );
@@ -122,9 +132,16 @@
 	      }
 	    }
 	  }
+	  document.getElementById("status").innerHTML = "Update complete.";
 	}
 
-	update();
+	update(true);
+
+	// update stock prices every ten seconds
+	setInterval(function() {
+	  update(true);
+	}, 10000);
+	
       </script>
   </body>
 </html>

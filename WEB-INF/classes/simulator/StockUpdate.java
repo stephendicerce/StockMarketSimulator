@@ -12,6 +12,10 @@ public class StockUpdate extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res)
         throws ServletException, IOException {
 
+	String updatePrices = (String)req.getParameter("prices");
+	if(updatePrices != null && updatePrices.equalsIgnoreCase("true"))
+	    Company.updatePrices();
+	
 	HttpSession session = req.getSession();
 	User user = (User)session.getAttribute("user");
 	Company[] companies = Company.getCompanies();
