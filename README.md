@@ -36,6 +36,9 @@ To run the application, you must have MySQL running on port 3306 of the same mac
     INSERT INTO Companies VALUES('McDonalds', 'MCD', 50, 100);
     INSERT INTO Companies VALUES('Microsoft', 'MSFT', 50, 100);
     INSERT INTO Companies VALUES('Ninetndo Co.', 'NTDOY', 50, 100);
+    INSERT INTO Companies VALUES('Yahoo', 'YHOO', 50, 100);
+    INSERT INTO Companies VALUES('Bitcoin', 'NYXBT', 50, 100);
+    INSERT INTO Companies VALUES('Berkshire Hathaway', 'BKR.A', 50, 100);
 ```
 
 Once the SQL database has been set up, run the application.
