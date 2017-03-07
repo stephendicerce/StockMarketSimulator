@@ -58,7 +58,11 @@ public class StockReader {
 	    for(int i=0; i<length; ++i) {
 		JSONObject obj = arr.getJSONObject(i);
 		String sym = obj.getString("t");
-		double price = Double.parseDouble(obj.getString("l"));
+		String[] priceStringComponents = obj.getString("l").split(",");
+		String priceString = "";
+		for(int j=0; j<priceStringComponents.length; ++j)
+		    priceString += priceStringComponents[j];
+		double price = Double.parseDouble(priceString);
 		Connection conn = null;
 		Statement statement = null;
 		try {
