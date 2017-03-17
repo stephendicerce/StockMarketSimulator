@@ -1,4 +1,4 @@
-<%@ page import="simulator.*" %>
+<%@ page import="com.simulator.*" %>
 <%
    Company.updatePrices();
    User user = (User)session.getAttribute("user");

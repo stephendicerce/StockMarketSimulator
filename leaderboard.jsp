@@ -1,4 +1,4 @@
-<%@ page import="simulator.*" %>
+<%@ page import="com.simulator.*" %>
 <%
   User user = (User)session.getAttribute("user");
   Company[] companies = Company.getCompanies();
