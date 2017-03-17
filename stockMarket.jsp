@@ -1,8 +1,8 @@
 <%@ page import="com.simulator.*" %>
 <%
-   Company.updatePrices();
-   User user = (User)session.getAttribute("user");
-   Company[] companies = Company.getCompanies();
+   com.simulator.Company.updatePrices();
+   com.simulator.User user = (com.simulator.User)session.getAttribute("user");
+   com.simulator.Company[] companies = com.simulator.Company.getCompanies();
    if(user == null) { %>  
 <html>
   <body>
@@ -49,7 +49,7 @@
     
     <h3> <% out.print(companies.length); %> Companies:</h3>
     <ol>
-      <% for(Company c : companies) {
+      <% for(com.simulator.Company c : companies) {
            String cname = c.getName();
            int owned = user.getNumberOfStocks(cname);
       %>

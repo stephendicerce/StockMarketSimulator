@@ -1,6 +1,6 @@
-<%@ page import="com.simulator.*" %>
+<%@ page import="com.simulator.User" %>
 <%
-  User user = (User)session.getAttribute("user");
+  com.simulator.User user = (com.simulator.User)session.getAttribute("user");
   if(user == null) { %>
 <html>
   <body>

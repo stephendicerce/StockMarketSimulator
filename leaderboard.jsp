@@ -1,7 +1,7 @@
 <%@ page import="com.simulator.*" %>
 <%
-  User user = (User)session.getAttribute("user");
-  Company[] companies = Company.getCompanies();
+  com.simulator.User user = (com.simulator.User)session.getAttribute("user");
+  com.simulator.Company[] companies = com.simulator.Company.getCompanies();
   if(user == null) { %>
 <html>
   <body>
@@ -49,7 +49,7 @@
     <br>
     <span id=companySelectorSpan>Company:
       <select id=companySelector onchange="sortByAverageStockPrice()">
-	<% for (Company c : companies) {
+	<% for (com.simulator.Company c : companies) {
 	   out.println("<option value=\"" + c.getName() + "\">" + c.getName() + "</option>");
 	   } %>
       </select>
