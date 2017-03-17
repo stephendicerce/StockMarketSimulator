@@ -2,6 +2,7 @@ package simulator;
 
 import java.util.HashMap;
 import java.lang.NullPointerException;
+import java.util.ArrayList;
 import java.sql.*;
 
 public class User {
@@ -10,6 +11,36 @@ public class User {
     private double money;
     private HashMap<String, Integer> stocks;
     private HashMap<String, Double> averagePrices;
+
+    public static User[] getUsers() {
+        ArrayList<User> users = null;
+        try (
+             Connection conn = DBConnector.getConnection();
+             Statement statement = conn.createStatement();
+	     Statement statement2 = conn.createStatement();
+             ResultSet rs = statement.executeQuery("SELECT * FROM users;");
+             ) {
+		while(rs.next()) {
+		    if(users == null) users = new ArrayList<>();
+		    HashMap<String, Integer> s = new HashMap<>();
+		    HashMap<String, Double> ap = new HashMap<>();
+		    String n = rs.getString("name");
+		    double money = rs.getDouble("money");
+		    ResultSet rs2 = statement2.executeQuery("SELECT * FROM stocks WHERE user='" + n + "'");
+		    while (rs2.next()) {
+			String company = rs2.getString("company");
+			int stocks = rs2.getInt("number");
+			double aPrice = rs2.getDouble("averagePrice");
+			s.put(company, stocks);
+			ap.put(company, aPrice);
+		    }
+		    users.add(new User(n, money, s, ap));
+		}
+		return users.toArray(new User[users.size()]);
+	    } catch(SQLException e) {
+	    return null;
+	}
+    }
 
     public static User loadUser(String n) {
 	double m, p;
@@ -59,7 +90,7 @@ public class User {
 	return money;
     }
 
-    public boolean purchaseStock(String cname) throws NullPointerException {
+    public boolean purchaseStock(String cname) {
 	Company comp = Company.getCompany(cname);
 	double price = comp.getStockValue();
 	double newAverage, avPrice;
@@ -83,7 +114,7 @@ public class User {
 	return false;
     }
 
-    public boolean sellStock(String cname) throws NullPointerException{
+    public boolean sellStock(String cname) {
 	Company comp = Company.getCompany(cname);
 	double price = comp.getStockValue();
 	if(getNumberOfStocks(cname) > 0 && comp.sellStock()) {
@@ -103,7 +134,7 @@ public class User {
 	return false;
     }
 
-    public double getStockValue() throws NullPointerException {
+    public double getStockValue() {
 	double total = 0;
 	Company[] companies = Company.getCompanies();
 	for(int i=0; i<companies.length; ++i) {

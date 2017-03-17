@@ -27,29 +27,21 @@ public class Simulate extends HttpServlet {
 	    
 	    if(action != null && company != null) {
 		if(action.equals("buy")) {
-		    try {
-			if(user.purchaseStock(company)) {
-			    json = "{ ";
-			    json += "\"status\" : \"success\","; 
-			    json += "\"balance\" : " + user.getMoney();
-			    json += "}";
-			} else // not enough money or stocks available
-			    json = "{ \"status\" : \"The transaction could not be completed\" }";
-		    } catch(NullPointerException e) {
-			json = "{ \"status\" : \"An error occurred. Please try again.\" }";
-		    }
+		    if(user.purchaseStock(company)) {
+			json = "{ ";
+			json += "\"status\" : \"success\","; 
+			json += "\"balance\" : " + user.getMoney();
+			json += "}";
+		    } else // not enough money or stocks available
+			json = "{ \"status\" : \"The transaction could not be completed\" }";
 		} else if(action.equals("sell")) {
-		    try {
-			if(user.sellStock(company)) {
-			    json = "{ ";
-			    json += "\"status\" : \"success\","; 
-			    json += "\"balance\" : " + user.getMoney();
-			    json += "}";
-			} else // not enough money or stocks available
-			    json = "{ \"status\" : \"The transaction could not be completed\" }";
-		    } catch(NullPointerException e) {
-			json = "{ \"status\" : \"An error occurred. Please try again.\" }";
-		    }
+		    if(user.sellStock(company)) {
+			json = "{ ";
+			json += "\"status\" : \"success\","; 
+			json += "\"balance\" : " + user.getMoney();
+			json += "}";
+		    } else // not enough money or stocks available
+			json = "{ \"status\" : \"The transaction could not be completed\" }";
 		}
 	    }
 

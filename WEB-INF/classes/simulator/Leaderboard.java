@@ -14,7 +14,7 @@ public class Leaderboard extends HttpServlet {
 	HttpSession session = req.getSession();
 	User user = (User)session.getAttribute("user");
 	String sortMethod = req.getParameter("sort");
-	User[] users = Users.getUsers();
+	User[] users = User.getUsers();
 	User temp;
 	String json = "";
 	if (user == null) {
