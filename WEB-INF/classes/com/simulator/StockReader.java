@@ -1,4 +1,4 @@
-package simulator;
+package com.simulator;
 
 import java.sql.*;
 import java.io.BufferedReader;

@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<web-app version="3.0"> 
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+<display-name>StockMarketSimulator</display-name>
   <!-- To save as "hello\WEB-INF\web.xml" -->
 
+  <servlet>
+    <servlet-name>Jersey REST Service</servlet-name>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <init-param>
+      <param-name>jersey.config.server.provider.packages</param-name>
+      <param-value>com.restful</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Jersey REST Service</servlet-name>
+    <url-pattern>/restful/*</url-pattern>
+  </servlet-mapping>
+   
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
  
    <servlet>
       <servlet-name>companiesServlet</servlet-name>
-      <servlet-class>simulator.Companies</servlet-class>
+      <servlet-class>com.simulator.Companies</servlet-class>
    </servlet>
   
    <servlet-mapping>
@@ -18,7 +33,7 @@
    
    <servlet>
      <servlet-name>loginServlet</servlet-name>
-     <servlet-class>simulator.Login</servlet-class>
+     <servlet-class>com.simulator.Login</servlet-class>
    </servlet>
    
    <servlet-mapping>
@@ -28,7 +43,7 @@
 
    <servlet>
      <servlet-name>servlet3</servlet-name>
-     <servlet-class>simulator.Simulate</servlet-class>
+     <servlet-class>com.simulator.Simulate</servlet-class>
    </servlet>
    
    <servlet-mapping>
@@ -38,7 +53,7 @@
 
    <servlet>
      <servlet-name>signUpServlet</servlet-name>
-     <servlet-class>simulator.Signup</servlet-class>
+     <servlet-class>com.simulator.Signup</servlet-class>
    </servlet>
    
    <servlet-mapping>
@@ -48,7 +63,7 @@
 
    <servlet>
      <servlet-name>stockUpdateServlet</servlet-name>
-     <servlet-class>simulator.StockUpdate</servlet-class>
+     <servlet-class>com.simulator.StockUpdate</servlet-class>
    </servlet>
    
    <servlet-mapping>
@@ -58,7 +73,7 @@
 
    <servlet>
      <servlet-name>leaderboardServlet</servlet-name>
-     <servlet-class>simulator.Leaderboard</servlet-class>
+     <servlet-class>com.simulator.Leaderboard</servlet-class>
    </servlet>
 
    <servlet-mapping>

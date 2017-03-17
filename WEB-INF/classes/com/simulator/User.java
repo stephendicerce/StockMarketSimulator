@@ -1,4 +1,4 @@
-package simulator;
+package com.simulator;
 
 import java.util.HashMap;
 import java.lang.NullPointerException;

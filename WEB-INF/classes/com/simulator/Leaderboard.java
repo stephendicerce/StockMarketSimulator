@@ -1,4 +1,4 @@
-package simulator;
+package com.simulator;
 
 import javax.servlet.*;
 import javax.servlet.http.*;

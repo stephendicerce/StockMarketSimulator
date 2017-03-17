@@ -1,4 +1,4 @@
-package simulator;
+package com.simulator;
 
 import java.util.ArrayList;
 import java.sql.*;
