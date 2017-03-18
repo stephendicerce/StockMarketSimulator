@@ -37,7 +37,7 @@ import org.json.*;
 	    json += "  name: " + c.getName() + ",\n";
 	    json += "  symbol: " + c.getSymbol() + ",\n";
 	    json += "  stockValue: " + c.getStockValue() + ",\n";
-	    json += "  availableStocks: " + c.getNumberOfAvailableStocks() + ",\n";
+	    json += "  availableStocks: " + c.getNumberOfAvailableStocks() + "\n";
 	    json += "}";
 	    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
