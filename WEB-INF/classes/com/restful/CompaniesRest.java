@@ -55,8 +55,8 @@ import java.io.IOException;
 		String symbol = obj.getString("symbol");
 
 		com.simulator.Company c = com.simulator.Company.getCompanyBySymbol(symbol);
-		if(c == null) {
-		    return Response.status(Response.Status.BAD_REQUEST).build();
+		if(c != null) {
+		    return Response.status(Response.Status.CONFLICT).entity("Company " + symbol + " already exists").build();
 		}
 
 		// Attempt to add the company

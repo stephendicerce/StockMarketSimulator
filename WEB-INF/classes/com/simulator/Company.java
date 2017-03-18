@@ -37,7 +37,7 @@ public class Company {
 	     Connection conn = DBConnector.getConnection();
 	     Statement statement = conn.createStatement();
 	     ) {
-		statement.executeUpdate("UPDATE Companies SET '"
+		statement.executeUpdate("INSERT INTO Companies Values('"
 					+ name + "', '"
 					+ symbol + "', "
 					+ Company.DEFAULT_STOCK_VALUE + ", "
