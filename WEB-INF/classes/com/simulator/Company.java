@@ -68,6 +68,24 @@ public class Company {
 	}
     }
 
+    public static Company getCompanyBySymbol(String sym) {
+	try (
+	     Connection conn = DBConnector.getConnection();
+	     Statement statement = conn.createStatement();
+	     ResultSet rs = statement.executeQuery("SELECT * FROM Companies WHERE symbol='"+ sym + "';");
+	     ) {
+	    if(rs.next()) {
+		String name = rs.getString("name");
+		double sv = rs.getDouble("stockValue");
+		int as = rs.getInt("availableStocks");
+		return new Company(name, sym, sv, as);
+	    } else 
+		return null;
+	} catch(SQLException e) {
+	    return null;
+	}
+    }
+
     public String getName() {
 	return name;
     }
