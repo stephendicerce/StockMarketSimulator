@@ -34,10 +34,10 @@ import java.io.IOException;
 	    }
 
 	    String json = "{\n";
-	    json += "  name: " + c.getName() + ",\n";
-	    json += "  symbol: " + c.getSymbol() + ",\n";
-	    json += "  stockValue: " + c.getStockValue() + ",\n";
-	    json += "  availableStocks: " + c.getNumberOfAvailableStocks() + "\n";
+	    json += "  \"name\": \"" + c.getName() + "\",\n";
+	    json += "  \"symbol\": \"" + c.getSymbol() + "\",\n";
+	    json += "  \"stockValue\": " + c.getStockValue() + ",\n";
+	    json += "  \"availableStocks\": " + c.getNumberOfAvailableStocks() + "\n";
 	    json += "}";
 	    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
