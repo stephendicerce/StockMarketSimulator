@@ -31,7 +31,7 @@ import org.json.*;
 
 	    com.simulator.Company c = com.simulator.Company.getCompanyBySymbol(sym);
 	    if(c == null) {
-		return Response.status(Response.Status.NOT_FOUND).entity("Company not found for symbol: " + sym).build();
+		return Response.status(Response.Status.NOT_FOUND).build();
 	    }
 	    String json = "{\n";
 	    json += "  name: " + c.getName() + ",\n";
