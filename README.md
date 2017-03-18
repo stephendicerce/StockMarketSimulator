@@ -17,7 +17,7 @@ To run the application, you must have MySQL running on port 3306 of the same mac
         symbol VARCHAR(10),
         stockValue DOUBLE PRECISION,
         availableStocks INT,
-        PRIMARY KEY (name)
+        PRIMARY KEY (symbol)
     );
     CREATE TABLE Stocks (
         user VARCHAR(40),

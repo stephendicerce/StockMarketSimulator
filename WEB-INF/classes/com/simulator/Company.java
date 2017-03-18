@@ -37,7 +37,7 @@ public class Company {
 	     Connection conn = DBConnector.getConnection();
 	     Statement statement = conn.createStatement();
 	     ) {
-		statement.executeUpdate("INSERT INTO Companies Values('"
+		statement.executeUpdate("UPDATE Companies SET '"
 					+ name + "', '"
 					+ symbol + "', "
 					+ Company.DEFAULT_STOCK_VALUE + ", "
@@ -48,7 +48,35 @@ public class Company {
 	}
 	return true;
     }
-    
+
+    public static boolean updateCompany(String name, String symbol) {
+	Company c = Company.getCompanyBySymbol(symbol);
+	try (
+	     Connection conn = DBConnector.getConnection();
+	     Statement statement = conn.createStatement();
+	     ) {
+		statement.executeUpdate("UPDATE Companies SET "
+					+ "name='" + name + "' "
+					+ "WHERE symbol='" + symbol + "';"
+					);
+	    } catch(SQLException e) {
+	    return false;
+	}
+	return true;
+    }
+
+    public static boolean deleteCompany(String symbol) {
+	try (
+	     Connection conn = DBConnector.getConnection();
+	     Statement statement = conn.createStatement();
+	     ) {
+		statement.executeUpdate("DELETE FROM Companies WHERE symbol='" + symbol + "'");
+	    } catch(SQLException e) {
+	    return false;
+	}
+	return true;
+    }    
+
     public static Company[] getCompanies() {
 	ArrayList<Company> companies = null;
         try (
@@ -56,16 +84,16 @@ public class Company {
 	     Statement statement = conn.createStatement();
 	     ResultSet rs = statement.executeQuery("SELECT * FROM Companies;");
 	     ) {
-	    while(rs.next()) {
-		if(companies == null) companies = new ArrayList<>();
-		String n = rs.getString("name");
-		String sym = rs.getString("symbol");
-		double sv = rs.getDouble("stockValue");
-		int as = rs.getInt("availableStocks");
-		companies.add(new Company(n, sym, sv, as));
-	    }
-	    return companies.toArray(new Company[companies.size()]);
-	} catch(SQLException e) {
+		while(rs.next()) {
+		    if(companies == null) companies = new ArrayList<>();
+		    String n = rs.getString("name");
+		    String sym = rs.getString("symbol");
+		    double sv = rs.getDouble("stockValue");
+		    int as = rs.getInt("availableStocks");
+		    companies.add(new Company(n, sym, sv, as));
+		}
+		return companies.toArray(new Company[companies.size()]);
+	    } catch(SQLException e) {
 	    return null;
 	}
     }
@@ -157,9 +185,9 @@ public class Company {
 	     Statement statement = conn.createStatement();
 	     ) {
 		statement.executeUpdate("UPDATE Companies SET "
-					+ "stockValue=" + stockValue + ", "
-					+ "availableStocks=" + stocksAvailable + " "
-					+ "WHERE name='" + name + "'"
+					+ "stockValue=" + this.stockValue + ", "
+					+ "availableStocks=" + this.stocksAvailable + " "
+					+ "WHERE symbol='" + this.symbol + "'"
 					);
 		return true;
 	    } catch(SQLException | NullPointerException e) {

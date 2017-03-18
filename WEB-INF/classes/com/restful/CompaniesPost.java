@@ -38,7 +38,7 @@ import java.io.IOException;
 	    } catch(IOException | JSONException e) { // bad json format
 		return Response.status(Response.Status.BAD_REQUEST).build();
 	    }
-	    return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	    return Response.status(Response.Status.OK).build();
 	}
 	
     }
