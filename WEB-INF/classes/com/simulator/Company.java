@@ -57,6 +57,7 @@ public class Company {
 	     ResultSet rs = statement.executeQuery("SELECT * FROM Companies WHERE name='"+ name + "';");
 	     ) {
 	    if(rs.next()) {
+		name = rs.getString("name");
 		String sym = rs.getString("symbol");
 		double sv = rs.getDouble("stockValue");
 		int as = rs.getInt("availableStocks");
@@ -76,6 +77,7 @@ public class Company {
 	     ) {
 	    if(rs.next()) {
 		String name = rs.getString("name");
+		sym = rs.getString("symbol");
 		double sv = rs.getDouble("stockValue");
 		int as = rs.getInt("availableStocks");
 		return new Company(name, sym, sv, as);

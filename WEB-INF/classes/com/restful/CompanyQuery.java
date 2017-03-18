@@ -5,7 +5,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import com.simulator.Company;
+import org.json.*;
 
 // Plain old Java Object it does not extend as class or implements
 // an interface
@@ -20,16 +22,24 @@ import com.simulator.Company;
 @Path("/companies/{symbol}")
     public class CompanyQuery {
 
-       	// This method is called if HTML is request
 	@GET
-	    @Produces(MediaType.TEXT_HTML)
-	    public String sayHtmlHello( @PathParam("symbol") String sym ) {
+	    public Response getCompany( @PathParam("symbol") String sym ) {
+
+	    if(sym == null || sym.trim().length() == 0) {
+		return Response.serverError().entity("sym cannot be blank").build();
+	    }
+
 	    com.simulator.Company c = com.simulator.Company.getCompanyBySymbol(sym);
-	    String response = "Company " + sym + " not found.";
-	    if(c != null)
-		response = c.getName();
-	    return "<html> " + "<title>Company Query</title>"
-		+ "<body><h1>" + response + "</body></h1>" + "</html> ";
+	    if(c == null) {
+		return Response.status(Response.Status.NOT_FOUND).entity("Company not found for symbol: " + sym).build();
+	    }
+	    String json = "{\n";
+	    json += "  name: " + c.getName() + ",\n";
+	    json += "  symbol: " + c.getSymbol() + ",\n";
+	    json += "  stockValue: " + c.getStockValue() + ",\n";
+	    json += "  availableStocks: " + c.getNumberOfAvailableStocks() + ",\n";
+	    json += "}";
+	    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 	
     }
