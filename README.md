@@ -45,3 +45,5 @@ To run the application, you must have MySQL running on port 3306 of the same mac
 Once the SQL database has been set up, run the application.
 
 Currently, stock prices are updated on login, and are drawn from Google finance api.
+
+To recompile the code, be sure to include each jar in the class path, and compile all the java files at the same time, so that each package can be seen by the others.

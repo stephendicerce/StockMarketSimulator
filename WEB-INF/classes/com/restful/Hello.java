@@ -18,28 +18,28 @@ import com.simulator.Company;
 //Sets the path to base URL + /hello
 @Path("/hello")
     public class Hello {
-	//	com.simulator.Company[] c = com.simulator.Company.getCompanies();
+	com.simulator.Company[] c = com.simulator.Company.getCompanies();
 
 	// This method is called if TEXT_PLAIN is request
 	@GET
 	    @Produces(MediaType.TEXT_PLAIN)
 	    public String sayPlainTextHello() {
-	    return "Hello Jersey";
+	    return c[0].getName();
 	}
 	
 	// This method is called if XML is request
 	@GET
 	    @Produces(MediaType.TEXT_XML)
 	    public String sayXMLHello() {
-	    return "<?xml version=\"1.0\"?>" + "<hello> Hello Jersey" + "</hello>";
+	    return "<?xml version=\"1.0\"?>" + "<hello> " + c[0].getName() + "</hello>";
 	}
 	
 	// This method is called if HTML is request
 	@GET
 	    @Produces(MediaType.TEXT_HTML)
 	    public String sayHtmlHello() {
-	    return "<html> " + "<title>" + "Hello Jersey" + "</title>"
-		+ "<body><h1>" + "Hello Jersey" + "</body></h1>" + "</html> ";
+	    return "<html> " + "<title>" + c[0].getName() + "</title>"
+		+ "<body><h1>" + c[0].getName() + "</body></h1>" + "</html> ";
 	}
 	
     }
