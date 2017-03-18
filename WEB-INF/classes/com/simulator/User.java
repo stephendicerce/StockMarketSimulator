@@ -176,5 +176,19 @@ public class User {
     public double getAveragePriceBoughtAt(String cname) {
 	return averagePrices.get(cname);
     }
+
+    public static User getUserByName(String name) {
+	User[] users = User.getUsers();
+	User user = null;
+
+	for (User u : users){
+	    if (u.getName().equals(name))
+		user = u;
+	}
+	if(user != null)
+	    return user;
+	else
+	    return null;
+    }
 }
     
