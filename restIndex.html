@@ -1,0 +1,90 @@
+<html>
+  <head><title>Company Query Page</title></head>
+  <body>
+    <button OnClick="list()">List</button>
+    <button OnClick="query()">Query</button>
+    <button OnClick="login()">Log in</button>
+    <button OnClick="signup()">Sign Up</button>
+    <div id="responseField"></div>
+    <script>	
+      function list() {
+        var xmlHttp = new XMLHttpRequest();
+        var url = location.origin + "/StockMarketSimulator/restful/companies";
+        xmlHttp.open( "GET", url, false ); // false for synchronous request
+        xmlHttp.send( null );
+        var res = xmlHttp.responseText;
+        console.log(res);
+        var companies = JSON.parse(res);
+        list = "<ul>";
+	for(var i=0; i<companies.length; ++i)
+          list = list + "<li><b>" + companies[i].symbol + "</b> ("
+					 + companies[i].name + ")"
+					 + "&nbsp&nbsp&nbsp&nbsp Stock Price: $"
+					 + companies[i].stockValue + "</li>";
+        list = list + "</ul>";
+					 
+        document.getElementById("responseField").innerHTML = list;
+      }
+      
+      function query() {
+        var sym = prompt("Enter the symbol of the company you wish to learn about:");
+        if(sym != null) {
+          var xmlHttp = new XMLHttpRequest();
+          var url = location.origin + "/StockMarketSimulator/restful/companies/" + sym;
+          xmlHttp.open( "GET", url, false ); // false for synchronous request
+          xmlHttp.send( null );
+          var res = xmlHttp.responseText;
+          var company = JSON.parse(res);
+          var html = "<br/><b>" + company.symbol + "</b> ("
+					 + company.name + ")"
+					 + "&nbsp&nbsp&nbsp&nbsp Stock Price: $"
+					 + company.stockValue + "<br/>"
+					 + "Stocks Available: " + company.availableStocks;
+          document.getElementById("responseField").innerHTML = html;
+        }
+      }
+      
+      function login() {
+        var name = prompt("Enter a name:");
+        if(name != null) {
+          var pass = prompt("Enter a password");
+          if(pass != null) {
+            var url = location.origin + "/StockMarketSimulator/login?name=" + name + "&pass=" + pass;
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", url, false ); // false for synchronous request
+            xmlHttp.send( null );
+            var response = xmlHttp.responseText;
+            console.log(response);
+            var json = JSON.parse(response);
+            if(json.login_status) {
+              window.location.replace(location.origin + "/StockMarketSimulator/dashboard");
+            } else {
+              console.log(json.error);
+              alert("Login failed.");
+            }
+          }
+        }
+      }
+      
+      function signup() {
+        var name = prompt("Enter a name:");
+        if(name != null) {
+          var pass = prompt("Enter a password");
+            if(pass != null) {
+            var url = location.origin + "/StockMarketSimulator/signup?name=" + name + "&pass=" + pass;
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", url, false ); // false for synchronous request
+            xmlHttp.send( null );
+            var status = JSON.parse(xmlHttp.responseText).login_status;
+            if(status) {
+              window.location.replace(location.origin + "/StockMarketSimulator/dashboard");
+            } else {
+              alert("Username taken.");
+            }
+            
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

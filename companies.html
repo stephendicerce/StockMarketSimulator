@@ -1,0 +1,92 @@
+<html>
+  <head><title>Company CRUD Page</title></head>
+  <body>
+
+    <b>Symbol:</b>
+    <input type="text" id="sym">
+    &nbsp&nbsp&nbsp&nbsp
+    <b>Name:</b>
+    <input type="text" id="name">
+
+    <br/>
+
+    <button OnClick="get()">GET</button>
+    <button OnClick="post()">POST</button>
+    <button OnClick="put()">PUT</button>
+    <button OnClick="del()">DELETE</button>
+
+    <br/>
+
+    <div id="responseField"></div>
+
+    <script>	
+      var baseurl = location.origin + "/StockMarketSimulator/restful/companies";
+
+      function get() {
+        var sym = document.getElementById("sym").value;
+
+        var xmlHttp = new XMLHttpRequest();
+        var url = baseurl;
+        if(sym !== "") url = url + "/" + sym;
+      
+        xmlHttp.open( "GET", url, false ); // false for synchronous request
+        xmlHttp.send( null );
+        var res = xmlHttp.responseText;
+        					 
+        document.getElementById("responseField").innerHTML = res;
+      }
+      
+      function post() {
+        var name = document.getElementById("name").value;
+        var sym = document.getElementById("sym").value;
+        var body = {};
+        body.name = name;
+        body.symbol = sym;
+
+        var xmlHttp = new XMLHttpRequest();
+        var url = baseurl;
+
+        xmlHttp.open( "POST", url, false ); // false for synchronous request
+        xmlHttp.setRequestHeader("Content-Type", "application/json");
+        xmlHttp.send(JSON.stringify(body));
+        var res = xmlHttp.responseText;
+
+        document.getElementById("responseField").innerHTML = res;
+      }
+
+      function put() {
+        var name = document.getElementById("name").value;
+        var sym = document.getElementById("sym").value;
+        var body = {};
+        body.name = name;
+
+        var xmlHttp = new XMLHttpRequest();
+        var url = baseurl;
+        if(sym !== "") url = url + "/" + sym;
+
+        xmlHttp.open( "PUT", url, false ); // false for synchronous request
+        xmlHttp.setRequestHeader("Content-Type", "application/json");
+        xmlHttp.send(JSON.stringify(body));
+        var res = xmlHttp.responseText;
+
+        document.getElementById("responseField").innerHTML = res;
+      }
+      
+      function del() {
+        var sym = document.getElementById("sym").value;
+
+        var xmlHttp = new XMLHttpRequest();
+        var url = baseurl;
+        if(sym !== "") url = url + "/" + sym;
+      
+        xmlHttp.open( "DELETE", url, false ); // false for synchronous request
+        xmlHttp.send( null );
+        var res = xmlHttp.responseText;
+        					 
+        document.getElementById("responseField").innerHTML = res;
+      }
+
+
+    </script>
+  </body>
+</html>
