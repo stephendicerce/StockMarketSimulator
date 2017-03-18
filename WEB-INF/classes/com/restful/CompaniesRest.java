@@ -1,13 +1,9 @@
 package com.restful;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.simulator.Company;
-import org.json.*;
 
 // Plain old Java Object it does not extend as class or implements
 // an interface
@@ -20,9 +16,10 @@ import org.json.*;
 
 //Sets the path to base URL + /companies/{symbol}
 @Path("/companies/{symbol}")
-    public class CompanyQuery {
+    public class CompaniesRest {
 
 	@GET
+	    @Produces(MediaType.APPLICATION_JSON)
 	    public Response getCompany( @PathParam("symbol") String sym ) {
 
 	    if(sym == null || sym.trim().length() == 0) {

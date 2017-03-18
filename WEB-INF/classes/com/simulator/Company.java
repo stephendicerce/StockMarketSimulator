@@ -7,6 +7,9 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 
 public class Company {
+    private static final int DEFAULT_NUMBER_OF_STOCKS = 100;
+    private static final int DEFAULT_STOCK_VALUE = 50;
+
     private String name;
     private String symbol;
     private double stockValue;
@@ -29,6 +32,23 @@ public class Company {
 	StockReader.updateStocks(symbols);
     }
 
+    public static boolean addCompany(String name, String symbol) {
+	try (
+	     Connection conn = DBConnector.getConnection();
+	     Statement statement = conn.createStatement();
+	     ) {
+		statement.executeUpdate("INSERT INTO Companies Values('"
+					+ name + "', '"
+					+ symbol + "', "
+					+ Company.DEFAULT_STOCK_VALUE + ", "
+					+ Company.DEFAULT_NUMBER_OF_STOCKS + ");"
+					);
+	    } catch(SQLException e) {
+	    return false;
+	}
+	return true;
+    }
+    
     public static Company[] getCompanies() {
 	ArrayList<Company> companies = null;
         try (
