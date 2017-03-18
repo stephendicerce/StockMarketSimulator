@@ -7,9 +7,6 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 
 public class Company {
-    private static final int DEFAULT_NUMBER_OF_STOCKS = 100;
-    private static final int DEFAULT_STOCK_VALUE = 50;
-
     private String name;
     private String symbol;
     private double stockValue;
@@ -32,51 +29,6 @@ public class Company {
 	StockReader.updateStocks(symbols);
     }
 
-    public static boolean addCompany(String name, String symbol) {
-	try (
-	     Connection conn = DBConnector.getConnection();
-	     Statement statement = conn.createStatement();
-	     ) {
-		statement.executeUpdate("UPDATE Companies SET '"
-					+ name + "', '"
-					+ symbol + "', "
-					+ Company.DEFAULT_STOCK_VALUE + ", "
-					+ Company.DEFAULT_NUMBER_OF_STOCKS + ");"
-					);
-	    } catch(SQLException e) {
-	    return false;
-	}
-	return true;
-    }
-
-    public static boolean updateCompany(String name, String symbol) {
-	Company c = Company.getCompanyBySymbol(symbol);
-	try (
-	     Connection conn = DBConnector.getConnection();
-	     Statement statement = conn.createStatement();
-	     ) {
-		statement.executeUpdate("UPDATE Companies SET "
-					+ "name='" + name + "' "
-					+ "WHERE symbol='" + symbol + "';"
-					);
-	    } catch(SQLException e) {
-	    return false;
-	}
-	return true;
-    }
-
-    public static boolean deleteCompany(String symbol) {
-	try (
-	     Connection conn = DBConnector.getConnection();
-	     Statement statement = conn.createStatement();
-	     ) {
-		statement.executeUpdate("DELETE FROM Companies WHERE symbol='" + symbol + "'");
-	    } catch(SQLException e) {
-	    return false;
-	}
-	return true;
-    }    
-
     public static Company[] getCompanies() {
 	ArrayList<Company> companies = null;
         try (
@@ -84,16 +36,16 @@ public class Company {
 	     Statement statement = conn.createStatement();
 	     ResultSet rs = statement.executeQuery("SELECT * FROM Companies;");
 	     ) {
-		while(rs.next()) {
-		    if(companies == null) companies = new ArrayList<>();
-		    String n = rs.getString("name");
-		    String sym = rs.getString("symbol");
-		    double sv = rs.getDouble("stockValue");
-		    int as = rs.getInt("availableStocks");
-		    companies.add(new Company(n, sym, sv, as));
-		}
-		return companies.toArray(new Company[companies.size()]);
-	    } catch(SQLException e) {
+	    while(rs.next()) {
+		if(companies == null) companies = new ArrayList<>();
+		String n = rs.getString("name");
+		String sym = rs.getString("symbol");
+		double sv = rs.getDouble("stockValue");
+		int as = rs.getInt("availableStocks");
+		companies.add(new Company(n, sym, sv, as));
+	    }
+	    return companies.toArray(new Company[companies.size()]);
+	} catch(SQLException e) {
 	    return null;
 	}
     }
@@ -105,27 +57,7 @@ public class Company {
 	     ResultSet rs = statement.executeQuery("SELECT * FROM Companies WHERE name='"+ name + "';");
 	     ) {
 	    if(rs.next()) {
-		name = rs.getString("name");
 		String sym = rs.getString("symbol");
-		double sv = rs.getDouble("stockValue");
-		int as = rs.getInt("availableStocks");
-		return new Company(name, sym, sv, as);
-	    } else 
-		return null;
-	} catch(SQLException e) {
-	    return null;
-	}
-    }
-
-    public static Company getCompanyBySymbol(String sym) {
-	try (
-	     Connection conn = DBConnector.getConnection();
-	     Statement statement = conn.createStatement();
-	     ResultSet rs = statement.executeQuery("SELECT * FROM Companies WHERE symbol='"+ sym + "';");
-	     ) {
-	    if(rs.next()) {
-		String name = rs.getString("name");
-		sym = rs.getString("symbol");
 		double sv = rs.getDouble("stockValue");
 		int as = rs.getInt("availableStocks");
 		return new Company(name, sym, sv, as);
@@ -185,9 +117,9 @@ public class Company {
 	     Statement statement = conn.createStatement();
 	     ) {
 		statement.executeUpdate("UPDATE Companies SET "
-					+ "stockValue=" + this.stockValue + ", "
-					+ "availableStocks=" + this.stocksAvailable + " "
-					+ "WHERE symbol='" + this.symbol + "'"
+					+ "stockValue=" + stockValue + ", "
+					+ "availableStocks=" + stocksAvailable + " "
+					+ "WHERE name='" + name + "'"
 					);
 		return true;
 	    } catch(SQLException | NullPointerException e) {
