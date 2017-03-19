@@ -31,7 +31,7 @@ public class StockUpdate extends HttpServlet {
 		json += " \"companies\" : {";
 		for(int i=0; i<companies.length; ++i) {
 		    Company c = companies[i];
-		    json += "\"" + c.getName() + "\" : {";
+		    json += "\"" + c.getSymbol() + "\" : {";
 		    json += " \"stockValue\" : " + c.getStockValue() + ",";
 		    json += " \"available\" : " + c.getNumberOfAvailableStocks() + ",";
 		    json += " \"averagePrice\" : " + user.getAveragePriceBoughtAt(c.getName()) + ",";

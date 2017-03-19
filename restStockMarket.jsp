@@ -51,28 +51,27 @@
     <ol>
       <% for(com.simulator.Company c : companies) {
            String cname = c.getName();
+	   String csym = c.getSymbol();
            int owned = user.getNumberOfStocks(cname);
       %>
 	<li>
 	  <b> <% out.print(cname); %> </b>
 	  &nbsp&nbsp&nbsp Stock Price:
-	  <span id=<% out.print("\"" + cname + "price\""); %> >
-	    <!-- <% out.print(String.format("%.2f", c.getStockValue())); %> -->
+	  <span id=<% out.print("\"" + csym + "price\""); %> >
 	  </span>
 	  <br/>
 	  Number Available:
-	  <span id=<% out.print("\"" + cname + "available\""); %> >
-	    <!-- <% out.print(c.getNumberOfAvailableStocks()); %> -->
+	  <span id=<% out.print("\"" + csym + "available\""); %> >
 	  </span>
 	  &nbsp&nbsp&nbsp Average Purchased Price:
-	  <span id=<% out.print("\"" + cname + "average\""); %> >
+	  <span id=<% out.print("\"" + csym + "average\""); %> >
 	  </span>
-	  <br/> Number Owned: <span id=<% out.print("\"" + cname + "owned\""); %> >
-	    <!-- <% out.print(owned); %> -->
+	  <br/> Number Owned:
+	  <span id=<% out.print("\"" + csym + "owned\""); %> >
 	  </span>
 	  <br/>
-	  <button OnClick='act(<% out.print("\"" + cname + "\""); %>, "buy")'>Purchase</button>
-	  <button OnClick='act(<% out.print("\"" + cname + "\""); %>, "sell")'>Sell</button><br/>
+	  <button OnClick='act(<% out.print("\"" + csym + "\""); %>, "buy")'>Purchase</button>
+	  <button OnClick='act(<% out.print("\"" + csym + "\""); %>, "sell")'>Sell</button><br/>
 	</li>
 	<% } %>
       </ol>
@@ -80,20 +79,39 @@
       <script>
 	function act(company, action) {
 	  document.getElementById("status").innerHTML = "Requesting transaction...";
-	  var url = location.origin + "/StockMarketSimulator/simulate?action=" + action + "&company=" + company;
+	  var url = location.origin + "/StockMarketSimulator/restful/stocks/" + <%= "\"" + user.getName() + "\"" %> + "/" + company;
+	  var body = {};
+	  body.action = action;
           var xmlHttp = new XMLHttpRequest();
-          xmlHttp.open( "GET", url, false ); // false for synchronous request
-          xmlHttp.send( null );
-	  var response = JSON.parse(xmlHttp.responseText);
+          xmlHttp.open( "POST", url, false ); // false for synchronous request
+	  xmlHttp.setRequestHeader("Content-Type", "application/json");
+          xmlHttp.send( JSON.stringify(body) );
+	  var responseText = xmlHttp.responseText;
+	  var response = JSON.parse(responseText);
           var status = response.status;
           if(status == "success") {
-            update(false);
+	    updateBalance(response.balance, response.stockValue);
+            updateCompany(company, response.available, response.averagePurchasePrice, response.owned);
 	    document.getElementById("status").innerHTML = "Transaction successful!";
-	  } else {
-	    alert(status);
+	  } else if(status == "Failed") {
+            alert("The transaction could not be completed.");
             document.getElementById("status").innerHTML = "Transaction failed.";
-	    location.reload();
+	  } else {
+	    alert("An error occurred. Please reload the stock market.");
+            document.getElementById("status").innerHTML = "Transaction failed.";
+            location.reload();
 	  }
+	}
+
+	function updateBalance(balance, stockValue) {
+	  document.getElementById("balance").innerHTML = balance.toFixed(2);
+	  document.getElementById("stockValue").innerHTML = stockValue.toFixed(2);
+	}
+
+	function updateCompany(company, available, average, owned) {
+	  document.getElementById(company + "available").innerHTML = available;
+	  document.getElementById(company + "average").innerHTML = average.toFixed(2);
+	  document.getElementById(company + "owned").innerHTML = owned;
 	}
 
 	function sendToDashboard() {
@@ -101,9 +119,6 @@
 	  window.location.replace(url);
 	}
 	
-	// Write a servlet to respond with JSON with all information for this page
-	// Then use this function to call it, and update the values of the page.
-	//
 	// If updatePrices is true, updates the prices of stocks
 	function update(updatePrices) {
 	  document.getElementById("status").innerHTML = "Updating...";
