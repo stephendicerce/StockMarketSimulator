@@ -57,7 +57,7 @@
             console.log(response);
             var json = JSON.parse(response);
             if(json.login_status) {
-              window.location.replace(location.origin + "/StockMarketSimulator/dashboard");
+              window.location.replace(location.origin + "/StockMarketSimulator/restDashboard");
             } else {
               console.log(json.error);
               alert("Login failed.");
@@ -77,7 +77,7 @@
             xmlHttp.send( null );
             var status = JSON.parse(xmlHttp.responseText).login_status;
             if(status) {
-              window.location.replace(location.origin + "/StockMarketSimulator/dashboard");
+              window.location.replace(location.origin + "/StockMarketSimulator/restDashboard");
             } else {
               alert("Username taken.");
             }
