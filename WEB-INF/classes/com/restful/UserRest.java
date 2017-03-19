@@ -99,8 +99,8 @@ import com.simulator.User;
 	private String getJsonForUser(com.simulator.User u) {
 	    String json = "{\n";
 	    json += " \"name\": \"" + u.getName() + "\",\n";
-	    json += " \"money\": " = u.getMoney() + "\n";
-	    json += "  \"stockValue\": " + u.getStockValue() + ",\n";
+	    json += " \"money\": " = u.getMoney() + ",\n";
+	    json += " \"stockValue\": " + u.getStockValue() + "\n";
 	    json += "}";
 	    return json;
 	}
