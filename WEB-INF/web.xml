@@ -92,6 +92,16 @@
    </servlet-mapping>
 
    <servlet>
+     <servlet-name>reststockmarket</servlet-name>
+     <jsp-file>/restStockMarket.jsp</jsp-file>
+   </servlet>
+   
+   <servlet-mapping>
+     <servlet-name>reststockmarket</servlet-name>
+     <url-pattern>/restStockMarket</url-pattern>
+   </servlet-mapping>
+
+   <servlet>
      <servlet-name>dashboard</servlet-name>
      <jsp-file>/dashboard.jsp</jsp-file>
    </servlet>
@@ -99,6 +109,16 @@
    <servlet-mapping>
      <servlet-name>dashboard</servlet-name>
      <url-pattern>/dashboard</url-pattern>
+   </servlet-mapping>
+
+   <servlet>
+     <servlet-name>restdashboard</servlet-name>
+     <jsp-file>/restDashboard.jsp</jsp-file>
+   </servlet>
+   
+   <servlet-mapping>
+     <servlet-name>restdashboard</servlet-name>
+     <url-pattern>/restDashboard</url-pattern>
    </servlet-mapping>
 
    <servlet>
@@ -112,6 +132,16 @@
    </servlet-mapping>
    
    <servlet>
+     <servlet-name>resttimeout</servlet-name>
+     <jsp-file>/restTimeout.jsp</jsp-file>
+   </servlet>
+   
+   <servlet-mapping>
+     <servlet-name>resttimeout</servlet-name>
+     <url-pattern>/restTimeout</url-pattern>
+   </servlet-mapping>
+
+   <servlet>
      <servlet-name>error</servlet-name>
      <jsp-file>/error.jsp</jsp-file>
    </servlet>
@@ -122,6 +152,16 @@
    </servlet-mapping>
 
    <servlet>
+     <servlet-name>resterror</servlet-name>
+     <jsp-file>/restError.jsp</jsp-file>
+   </servlet>
+   
+   <servlet-mapping>
+     <servlet-name>resterror</servlet-name>
+     <url-pattern>/restError</url-pattern>
+   </servlet-mapping>
+
+   <servlet>
      <servlet-name>leaderboard</servlet-name>
      <jsp-file>/leaderboard.jsp</jsp-file>
    </servlet>
@@ -129,6 +169,16 @@
    <servlet-mapping>
      <servlet-name>leaderboard</servlet-name>
      <url-pattern>/leaderboard</url-pattern>
+   </servlet-mapping>
+
+   <servlet>
+     <servlet-name>restleaderboard</servlet-name>
+     <jsp-file>/restLeaderboard.jsp</jsp-file>
+   </servlet>
+
+   <servlet-mapping>
+     <servlet-name>restleaderboard</servlet-name>
+     <url-pattern>/restLeaderboard</url-pattern>
    </servlet-mapping>
 
 </web-app>

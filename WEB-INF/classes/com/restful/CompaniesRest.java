@@ -54,6 +54,10 @@ import java.io.IOException;
 		String name = obj.getString("name");
 		String symbol = obj.getString("symbol");
 
+		if( symbol == null || symbol.equals("") ||
+		    name == null || name.equals("") )
+		    return Response.status(Response.Status.BAD_REQUEST).entity("Must provide a symbol and name.").build();
+		
 		com.simulator.Company c = com.simulator.Company.getCompanyBySymbol(symbol);
 		if(c != null) {
 		    return Response.status(Response.Status.CONFLICT).entity("Company " + symbol + " already exists").build();
