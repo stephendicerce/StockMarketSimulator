@@ -33,12 +33,7 @@ import java.io.IOException;
 		return Response.status(Response.Status.NOT_FOUND).build();
 	    }
 
-	    String json = "{\n";
-	    json += "  \"name\": \"" + c.getName() + "\",\n";
-	    json += "  \"symbol\": \"" + c.getSymbol() + "\",\n";
-	    json += "  \"stockValue\": " + c.getStockValue() + ",\n";
-	    json += "  \"availableStocks\": " + c.getNumberOfAvailableStocks() + "\n";
-	    json += "}";
+	    String json = getJsonForCompany(c);
 	    return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 
@@ -70,7 +65,7 @@ import java.io.IOException;
 	    } catch(IOException | JSONException e) { // bad json format
 		return Response.status(Response.Status.BAD_REQUEST).build();
 	    }
-	    return Response.status(Response.Status.OK).build();
+	    return Response.status(Response.Status.NO_CONTENT).build();
 	}
 	
 	@DELETE
@@ -86,6 +81,17 @@ import java.io.IOException;
 	    if(!com.simulator.Company.deleteCompany(sym)) {
 		return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 	    }
-	    return Response.status(Response.Status.OK).build();
+	    String json = getJsonForCompany(c);
+	    return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	}
+
+	private String getJsonForCompany(com.simulator.Company c) {
+	    String json = "{\n";
+	    json += "  \"name\": \"" + c.getName() + "\",\n";
+	    json += "  \"symbol\": \"" + c.getSymbol() + "\",\n";
+	    json += "  \"stockValue\": " + c.getStockValue() + ",\n";
+	    json += "  \"availableStocks\": " + c.getNumberOfAvailableStocks() + "\n";
+	    json += "}";
+	    return json;
 	}
     }

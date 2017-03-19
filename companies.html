@@ -1,6 +1,10 @@
 <html>
   <head><title>Company CRUD Page</title></head>
   <body>
+    <input type="radio" name="type" value="companies" checked="true" OnClick='setSpecific(false)'>/companies</input>
+    <input type="radio" name="type" value="company" OnClick='setSpecific(true)'>/companies/{symbol}</input>
+    
+    <br/>
 
     <b>Symbol:</b>
     <input type="text" id="sym">
@@ -21,19 +25,27 @@
 
     <script>	
       var baseurl = location.origin + "/StockMarketSimulator/restful/companies";
+      var specific = false;
+
+      function setSpecific(val) {
+        specific = val;
+      }
 
       function get() {
         var sym = document.getElementById("sym").value;
 
         var xmlHttp = new XMLHttpRequest();
         var url = baseurl;
-        if(sym !== "") url = url + "/" + sym;
+        if(specific) url = url + "/" + sym;
       
         xmlHttp.open( "GET", url, false ); // false for synchronous request
         xmlHttp.send( null );
         var res = xmlHttp.responseText;
-        					 
-        document.getElementById("responseField").innerHTML = res;
+        var status = xmlHttp.status;
+        var display = "<b> Request: </b> GET " + url;
+        display = display + "<br/>";
+        display = display + "<b>" + status + ": </b>" + res;
+        document.getElementById("responseField").innerHTML = display;
       }
       
       function post() {
@@ -45,13 +57,19 @@
 
         var xmlHttp = new XMLHttpRequest();
         var url = baseurl;
+        if(specific) url = url + "/" + sym;
 
         xmlHttp.open( "POST", url, false ); // false for synchronous request
         xmlHttp.setRequestHeader("Content-Type", "application/json");
         xmlHttp.send(JSON.stringify(body));
         var res = xmlHttp.responseText;
-
-        document.getElementById("responseField").innerHTML = res;
+        var status = xmlHttp.status;
+        var display = "<b> Request: </b> POST " + url;
+        display = display + "<br/>";
+        display = display + "<b> Body: </b>" + JSON.stringify(body);
+        display = display + "<br/>";
+        display = display + "<b>" + status + ": </b>" + res;
+        document.getElementById("responseField").innerHTML = display;
       }
 
       function put() {
@@ -62,28 +80,37 @@
 
         var xmlHttp = new XMLHttpRequest();
         var url = baseurl;
-        if(sym !== "") url = url + "/" + sym;
+        if(specific) url = url + "/" + sym;
 
         xmlHttp.open( "PUT", url, false ); // false for synchronous request
         xmlHttp.setRequestHeader("Content-Type", "application/json");
         xmlHttp.send(JSON.stringify(body));
         var res = xmlHttp.responseText;
-
-        document.getElementById("responseField").innerHTML = res;
+        var status = xmlHttp.status;
+        var display = "<b> Request: </b> PUT " + url;
+        display = display + "<br/>";
+        display = display + "<b> Body: </b>" + JSON.stringify(body);
+        display = display + "<br/>";
+        display = display + "<b>" + status + ": </b>" + res;
+        document.getElementById("responseField").innerHTML = display;
       }
       
       function del() {
         var sym = document.getElementById("sym").value;
+        var body = null;
 
         var xmlHttp = new XMLHttpRequest();
         var url = baseurl;
-        if(sym !== "") url = url + "/" + sym;
+        if(specific) url = url + "/" + sym;
       
         xmlHttp.open( "DELETE", url, false ); // false for synchronous request
         xmlHttp.send( null );
         var res = xmlHttp.responseText;
-        					 
-        document.getElementById("responseField").innerHTML = res;
+        var status = xmlHttp.status;
+        var display = "<b> Request: </b> DELETE " + url;
+        display = display + "<br/>";
+        display = display + "<b>" + status + ": </b>" + res;
+        document.getElementById("responseField").innerHTML = display;
       }
 
 
