@@ -33,9 +33,11 @@ import java.io.IOException;
 	    String json = "{\n";
 	    
 	    for(int i=0, length=companies.length; i<length; ++i) {
-		com.simulator.Company c = companies[i];
-		String cname = c.getName();
-		json += "  \"" + c.getSymbol() + "\": {\n";
+		com.simulator.Company company = companies[i];
+		String cname = company.getName();
+		json += "  \"" + company.getSymbol() + "\": {\n";
+		json += "    \"price\": " + company.getStockValue() + ",\n";
+		json += "    \"available\": " + company.getNumberOfAvailableStocks() + ",\n";
 		json += "    \"stocks\": " + user.getNumberOfStocks(cname) + ",\n";
 		json += "    \"averagePurchasePrice\": " + user.getAveragePriceBoughtAt(cname) + "\n";
 		json += "  }";

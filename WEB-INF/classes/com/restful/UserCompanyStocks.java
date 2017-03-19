@@ -37,6 +37,8 @@ import java.io.IOException;
 	private String getUserCompanyStockJSON(com.simulator.User user, com.simulator.Company company) {
 	    String json = "{\n";
 	    String cname = company.getName();
+	    json += "  \"price\": " + company.getStockValue() + ",\n";
+	    json += "  \"available\": " + company.getNumberOfAvailableStocks() + ",\n";
 	    json += "  \"stocks\": " + user.getNumberOfStocks(cname) + ",\n";
 	    json += "  \"averagePurchasePrice\": " + user.getAveragePriceBoughtAt(cname) + "\n";
 	    json += "}";

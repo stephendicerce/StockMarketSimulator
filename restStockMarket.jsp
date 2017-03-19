@@ -83,7 +83,7 @@
 	  var body = {};
 	  body.action = action;
           var xmlHttp = new XMLHttpRequest();
-          xmlHttp.open( "POST", url, false ); // false for synchronous request
+          xmlHttp.open( "POST", url, false );
 	  xmlHttp.setRequestHeader("Content-Type", "application/json");
           xmlHttp.send( JSON.stringify(body) );
 	  var responseText = xmlHttp.responseText;
@@ -97,9 +97,8 @@
             alert("The transaction could not be completed.");
             document.getElementById("status").innerHTML = "Transaction failed.";
 	  } else {
-	    alert("An error occurred. Please reload the stock market.");
             document.getElementById("status").innerHTML = "Transaction failed.";
-            location.reload();
+	    reloadPage();
 	  }
 	}
 
@@ -114,47 +113,40 @@
 	  document.getElementById(company + "owned").innerHTML = owned;
 	}
 
+	function reloadPage() {
+	  alert("An error occurred. Please reload the stock market.");
+          location.reload();
+	}
+
 	function sendToDashboard() {
 	  var url = location.origin + "/StockMarketSimulator/restDashboard";
 	  window.location.replace(url);
 	}
 	
-	// If updatePrices is true, updates the prices of stocks
-	function update(updatePrices) {
+	function update() {
 	  document.getElementById("status").innerHTML = "Updating...";
-          var url = location.origin + "/StockMarketSimulator/marketUpdate";
-	  if(updatePrices)
-	    url += "?prices=true";
+          var url = location.origin + "/StockMarketSimulator/restful/stocks/" + <%= "\"" + user.getName() + "\"" %>;
           var xmlHttp = new XMLHttpRequest();
-          xmlHttp.open( "GET", url, false ); // false for synchronous request
+          xmlHttp.open( "GET", url, false );
           xmlHttp.send( null );
-	  var response = JSON.parse(xmlHttp.responseText);
-	  if(response.timeout) {
-	    window.location.replace(location.origin + "/StockMarketSimulator/restTimeout");
-          } else if(response.error) {
-	    alert("An error occurred.");
-	    location.reload();
-          } else {
-	    document.getElementById("balance").innerHTML = response.balance.toFixed(2);
-	    document.getElementById("stockValue").innerHTML = response.stockValue.toFixed(2);
-	    var companies = response.companies;
-	    for(var company in companies) {
-	      if(companies.hasOwnProperty(company)) {
-                document.getElementById(company+"price").innerHTML = companies[company].stockValue.toFixed(2);
-	        document.getElementById(company+"available").innerHTML = companies[company].available;
-	        document.getElementById(company+"average").innerHTML = companies[company].averagePrice.toFixed(2);
-	        document.getElementById(company+"owned").innerHTML = companies[company].owned;
-	      }
+	  if(xmlHttp.status !== 200) {
+	    reloadPage();
+	  } else {
+            var companies = JSON.parse(xmlHttp.responseText);
+	    for(var symbol in companies) {
+	      var company = companies[symbol];
+              document.getElementById(symbol+"price").innerHTML = company.price.toFixed(2);
+              updateCompany(symbol, company.available, company.averagePurchasePrice, company.stocks);
 	    }
 	  }
-	  document.getElementById("status").innerHTML = "Update complete.";
+	  document.getElementById("status").innerHTML = "Update Complete.";
 	}
 
-	update(true);
+	update();
 
 	// update stock prices every ten seconds
 	setInterval(function() {
-	  update(true);
+	  update();
 	}, 10000);
 	
       </script>
