@@ -139,6 +139,17 @@
               updateCompany(symbol, company.available, company.averagePurchasePrice, company.stocks);
 	    }
 	  }
+	  var url = location.origin + "/StockMarketSimulator/restful/users/" + <%= "\"" + user.getName() + "\"" %>;
+	  xmlHttp.open( "GET", url, false);
+	  xmlHttp.send( null );
+	  if(xmlHttp.status !== 200) {
+	    reloadPage():
+	  } else {
+// UNCOMMENT AND TEST THIS STUFF WHEN TOTTI'S CODE IS PUSHED
+//	    var user = JSON.parse(xmlHttp.responseText);
+//	    document.getElementById("balance").innerHTML = user.money.toFixed(2);
+//	    document.getElementById("stockValue").innerHTML = user.stockValue.toFixed(2);
+	  }
 	  document.getElementById("status").innerHTML = "Update Complete.";
 	}
 

@@ -19,6 +19,8 @@ import java.io.IOException;
 	    @Produces(MediaType.APPLICATION_JSON)
 	    public Response getStocks( @PathParam("username") String name ) {
 
+	    updatePrices();
+
 	    com.simulator.User user = com.simulator.User.loadUser(name);
 	    if(user == null) {
 		return Response.status(Response.Status.NOT_FOUND).entity("User " + name + " not found.").build();
@@ -46,6 +48,16 @@ import java.io.IOException;
 	    }
 	    json += "}";
 	    return json;
+	}
+	
+	// Updates the stock prices of the companies.
+	public void updatePrices() {
+	    com.simulator.Company[] companies = com.simulator.Company.getCompanies();
+	    String[] symbols = new String[companies.length];
+	    for(int i=0, length=companies.length; i<length; ++i) {
+		symbols[i] = companies[i].getSymbol();
+	    }
+	    com.simulator.StockReader.updateStocks(symbols);
 	}
 	
     }

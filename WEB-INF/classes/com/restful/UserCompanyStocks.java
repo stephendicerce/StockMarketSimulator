@@ -21,6 +21,8 @@ import java.io.IOException;
 	    @Produces(MediaType.APPLICATION_JSON)
 	    public Response getStocks( @PathParam("username") String name, @PathParam("symbol") String symbol ) {
 
+	    updatePrices();
+
 	    com.simulator.User user = com.simulator.User.loadUser(name);
 	    com.simulator.Company company = com.simulator.Company.getCompanyBySymbol(symbol);
 	    if(user == null) {
@@ -100,6 +102,16 @@ import java.io.IOException;
 	    } catch(IOException | JSONException e) { // bad json format
 		return Response.status(Response.Status.BAD_REQUEST).build();
 	    } 
+	}
+
+	// Updates the stock prices of the companies.
+	public void updatePrices() {
+	    com.simulator.Company[] companies = com.simulator.Company.getCompanies();
+	    String[] symbols = new String[companies.length];
+	    for(int i=0, length=companies.length; i<length; ++i) {
+		symbols[i] = companies[i].getSymbol();
+	    }
+	    com.simulator.StockReader.updateStocks(symbols);
 	}
 
     }
