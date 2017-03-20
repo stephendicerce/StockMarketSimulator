@@ -11,7 +11,19 @@ public class User {
     private double money;
     private HashMap<String, Integer> stocks;
     private HashMap<String, Double> averagePrices;
-
+    
+    public static String getPassword(){
+	try(
+	    Connection conn = DBConnector.getConnection();
+	    Statement statement = conn.createStatement();
+	    ResultSet rs = statement.executeQuery("SELECT password FROM users WHERE name=\"" + getName() + "\";");
+	    ) {
+		String password = rs.getString("password");
+		return password;
+	    } catch(SQLException e) {
+	    return null;
+	}
+    }
     public static User[] getUsers() {
         ArrayList<User> users = null;
         try (
@@ -175,6 +187,34 @@ public class User {
 
     public double getAveragePriceBoughtAt(String cname) {
 	return averagePrices.get(cname);
+    }
+
+    public static boolean updateUser(String name, String newName) {
+	User u = User.loadUser(name);
+	try(
+	    Connection conn = DBConnector.getConnection();
+	    Statement statement = conn.createStatement();
+	    ) {
+		statement.executeUpdate("UPDATE Users SET "
+					+ "name='" + newName + "' "
+					+ "WHERE name='" + name + "';"
+					);
+	    } catch(SQLException e) {
+	    return false;
+	}
+	return true;
+    }
+
+    public static boolean deleteUser(String name) {
+	try(
+	    Connection conn = DBConnector.getConnection();
+	    Statement statement = conn.createStatement();
+	    ) {
+		statement.executeUpdate("DELETE FROM Users WHERE name='" + name + "';");
+	    } catch(SQLException e) {
+	    return false;
+	}
+	return true;
     }
 }
     

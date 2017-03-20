@@ -9,9 +9,39 @@ public class User {
     public static final double START_MONEY = 5000;
     private String name;
     private double money;
+    private String password;
     private HashMap<String, Integer> stocks;
     private HashMap<String, Double> averagePrices;
-
+    
+    public String getPassword(){
+	return password;
+    }
+    
+    public static boolean addUser(String name, String password) {
+	try (
+	     Connection conn = DBConnector.getConnection();
+	     Statement statement = conn.createStatement();
+             ) {
+                statement.executeUpdate("INSERT INTO Users Values('"
+					+ name + "', '"
+					+ password + "', "
+					+ User.START_MONEY + ")"
+					);
+                Company[] companies = Company.getCompanies();
+                for(Company c : companies) {
+                    statement.executeUpdate("INSERT INTO Stocks VALUES('"
+                                            + name + "', '"
+                                            + c.getName() + "', "
+                                            + 0 + ", "
+                                            + 0 + ")"
+                                            );
+                }
+	    } catch(SQLException | NullPointerException e) {
+	    return false;
+	}
+	return true;
+    }
+    
     public static User[] getUsers() {
         ArrayList<User> users = null;
         try (
@@ -25,6 +55,7 @@ public class User {
 		    HashMap<String, Integer> s = new HashMap<>();
 		    HashMap<String, Double> ap = new HashMap<>();
 		    String n = rs.getString("name");
+		    String p = rs.getString("password");
 		    double money = rs.getDouble("money");
 		    ResultSet rs2 = statement2.executeQuery("SELECT * FROM stocks WHERE user='" + n + "'");
 		    while (rs2.next()) {
@@ -34,7 +65,7 @@ public class User {
 			s.put(company, stocks);
 			ap.put(company, aPrice);
 		    }
-		    users.add(new User(n, money, s, ap));
+		    users.add(new User(n, p, money, s, ap));
 		}
 		return users.toArray(new User[users.size()]);
 	    } catch(SQLException e) {
@@ -43,6 +74,7 @@ public class User {
     }
 
     public static User loadUser(String n) {
+	String pass;
 	double m, p;
 	HashMap<String, Integer> s = new HashMap<>();
 	HashMap<String, Double> ap = new HashMap<>();
@@ -52,6 +84,7 @@ public class User {
 	     ) {
 	    ResultSet rs = statement.executeQuery("SELECT * FROM Users WHERE name='" + n + "'");
 	    if(rs.next()) {
+		pass = rs.getString("password");
 		m = rs.getDouble("money");
 		rs = statement.executeQuery("SELECT * FROM Stocks WHERE user='" + n + "'");
 		while(rs.next()) {
@@ -61,7 +94,7 @@ public class User {
 		    s.put(company, stocks);
 		    ap.put(company, aPrice);
 		}
-		return new User(n, m, s, ap);
+		return new User(n, pass, m, s, ap);
 	    } else {
 		return null;
 	    }
@@ -70,8 +103,9 @@ public class User {
 	}
     }
     
-    public User(String n, double m, HashMap<String, Integer> s, HashMap<String, Double> a) {
+    public User(String n, String p, double m, HashMap<String, Integer> s, HashMap<String, Double> a) {
 	name = n;
+	password = p;
 	money = m;
 	stocks = s;
 	averagePrices = a;
@@ -177,18 +211,33 @@ public class User {
 	return averagePrices.get(cname);
     }
 
-    public static User getUserByName(String name) {
-	User[] users = User.getUsers();
-	User user = null;
-
-	for (User u : users){
-	    if (u.getName().equals(name))
-		user = u;
+    public static boolean updateUser(String name, String password) {
+	User u = User.loadUser(name);
+	try(
+	    Connection conn = DBConnector.getConnection();
+	    Statement statement = conn.createStatement();
+	    ) {
+		statement.executeUpdate("UPDATE Users SET "
+					+ "password='" + password + "' "
+					+ "WHERE name='" + name + "';"
+					);
+	    } catch(SQLException e) {
+	    return false;
 	}
-	if(user != null)
-	    return user;
-	else
-	    return null;
+	return true;
+    }
+
+    public static boolean deleteUser(String name) {
+	try(
+	    Connection conn = DBConnector.getConnection();
+	    Statement statement = conn.createStatement();
+	    ) {
+		statement.executeUpdate("DELETE FROM Users WHERE name='" + name + "';");
+		statement.executeUpdate("DELETE FROM Stocks WHERE user='" + name + "';");
+	    } catch(SQLException e) {
+	    return false;
+	}
+	return true;
     }
 }
     
