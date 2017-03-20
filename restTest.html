@@ -1,0 +1,57 @@
+<html>
+  <head><title>Rest Test</title></head>
+  <body>
+    <b>Path: </b>http://localhost:8080/StockMarketSimulator/restful/<input type="text" id="path"/>
+    
+    <br/><br/>
+
+    <b>Body: </b><textarea id="body" rows="6" cols="50"></textarea>
+
+    &nbsp&nbsp&nbsp&nbsp
+
+    <b>Verb: </b><select id="verb">
+      <option value="GET">GET</option>
+      <option value="POST">POST</option>
+      <option value="PUT">PUT</option>
+      <option value="DELETE">DELETE</option>
+    </select>
+
+    <br/><br/>
+
+    <button OnClick="submit()">Submit</button>
+
+    <br/><br/>
+
+    <b>Results:</b>
+
+    <br/><br/>
+
+    <div id="responseField" style="margin-left:20px"></div>
+
+    <script>	
+      var baseurl = location.origin + "/StockMarketSimulator/restful/";
+
+      function submit() {
+        var path = document.getElementById("path").value;
+        var body = document.getElementById("body").value;
+        var verb = document.getElementById("verb").value;
+
+        var xmlHttp = new XMLHttpRequest();
+        var url = baseurl + path;
+
+        xmlHttp.open( verb, url, false ); // false for synchronous request
+        xmlHttp.setRequestHeader("Content-Type", "application/json");
+        xmlHttp.send( body );
+        var res = xmlHttp.responseText;
+        var status = xmlHttp.status;
+        var display = "<b> Request: </b> " + verb + " "  + url;
+        display = display + "<br/><br/>";
+        display = display + "<b> Body: </b>" + JSON.stringify(body);
+        display = display + "<br/><br/>";
+        display = display + "<b>" + status + ": </b>" + res;
+        document.getElementById("responseField").innerHTML = display;
+      }
+
+    </script>
+  </body>
+</html>
