@@ -1,8 +1,7 @@
 package com.restful;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import com.simulator.User;
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -16,7 +15,7 @@ import java.io.IOException;
 	
 	@GET
 	    @Produces(MediaType.APPLICATION_JSON)
-	    public Response getUsers() {
+	    public Response getUsers(@Context UriInfo uriInfo) {
 	    com.simulator.User[] users = com.simulator.User.getUsers();
 	    if(users == null)
 		return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -24,12 +23,21 @@ import java.io.IOException;
 	    String json = "[\n";
 	    for(int i = 0, length = users.length; i < length; ++i) {
 		com.simulator.User u = users[i];
-		json += " {\n";
-		json += "   \"name\": \"" + u.getName() + "\",\n";
-		json += " \"password\": \"" + u.getPassword() + "\",\n";
-		json += "   \"money\": " + u.getMoney() + ",\n";
-		json += "   \"stockValue\": " + u.getStockValue() + "\n";
-		json += " }";
+		UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+		String currentPath = builder.build().toString();
+		String uname = u.getName();
+		json += "  {\n";
+		json += "    \"name\": \"" + uname + "\",\n";
+		json += "    \"password\": \"" + u.getPassword() + "\",\n";
+		json += "    \"money\": " + u.getMoney() + ",\n";
+		json += "    \"stockValue\": " + u.getStockValue() + ",\n";
+		json += "    \"links\": [\n";
+		json += "      {\n";
+		json += "        \"rel\": \"self\",\n";
+		json += "        \"href\": \"" + currentPath + "/" + uname + "\"\n";;
+		json += "      }\n";
+		json += "    ]\n";
+		json += "  }";
 		if(i < length - 1)
 		    json += ",";
 		json += "\n";

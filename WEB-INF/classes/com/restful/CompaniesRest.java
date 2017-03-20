@@ -1,8 +1,7 @@
 package com.restful;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import com.simulator.Company;
 import com.simulator.StockReader;
 import org.json.JSONObject;
@@ -17,7 +16,7 @@ import java.io.IOException;
 
 	@GET
 	    @Produces(MediaType.APPLICATION_JSON)
-	    public Response getCompanies() {
+	    public Response getCompanies(@Context UriInfo uriInfo) {
 
 	    updatePrices();
 
@@ -28,11 +27,21 @@ import java.io.IOException;
 	    String json = "[\n";
 	    for(int i=0, length=companies.length; i<length; ++i) {
 		com.simulator.Company c = companies[i];
+		UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+		String currentPath = builder.build().toString();
+		String cname = c.getName();
+		String csym = c.getSymbol();
 		json += "  {\n";
-		json += "    \"name\": \"" + c.getName() + "\",\n";
+		json += "    \"name\": \"" + cname + "\",\n";
 		json += "    \"symbol\": \"" + c.getSymbol() + "\",\n";
 		json += "    \"stockValue\": " + c.getStockValue() + ",\n";
-		json += "    \"availableStocks\": " + c.getNumberOfAvailableStocks() + "\n";
+		json += "    \"availableStocks\": " + c.getNumberOfAvailableStocks() + ",\n";
+		json += "    \"links\": [\n";
+		json += "      {\n";
+		json += "        \"rel\": \"self\",\n";
+		json += "        \"href\": \"" + currentPath + "/" + csym + "\"\n";;
+		json += "      }\n";
+		json += "    ]\n";
 		json += "  }";
 		if(i<length-1)
 		    json += ",";
