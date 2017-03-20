@@ -51,28 +51,27 @@
     <ol>
       <% for(com.simulator.Company c : companies) {
            String cname = c.getName();
+	   String csym = c.getSymbol();
            int owned = user.getNumberOfStocks(cname);
       %>
 	<li>
 	  <b> <% out.print(cname); %> </b>
 	  &nbsp&nbsp&nbsp Stock Price:
-	  <span id=<% out.print("\"" + cname + "price\""); %> >
-	    <!-- <% out.print(String.format("%.2f", c.getStockValue())); %> -->
+	  <span id=<% out.print("\"" + csym + "price\""); %> >
 	  </span>
 	  <br/>
 	  Number Available:
-	  <span id=<% out.print("\"" + cname + "available\""); %> >
-	    <!-- <% out.print(c.getNumberOfAvailableStocks()); %> -->
+	  <span id=<% out.print("\"" + csym + "available\""); %> >
 	  </span>
 	  &nbsp&nbsp&nbsp Average Purchased Price:
-	  <span id=<% out.print("\"" + cname + "average\""); %> >
+	  <span id=<% out.print("\"" + csym + "average\""); %> >
 	  </span>
-	  <br/> Number Owned: <span id=<% out.print("\"" + cname + "owned\""); %> >
-	    <!-- <% out.print(owned); %> -->
+	  <br/> Number Owned:
+	  <span id=<% out.print("\"" + csym + "owned\""); %> >
 	  </span>
 	  <br/>
-	  <button OnClick='act(<% out.print("\"" + cname + "\""); %>, "buy")'>Purchase</button>
-	  <button OnClick='act(<% out.print("\"" + cname + "\""); %>, "sell")'>Sell</button><br/>
+	  <button OnClick='act(<% out.print("\"" + csym + "\""); %>, "buy")'>Purchase</button>
+	  <button OnClick='act(<% out.print("\"" + csym + "\""); %>, "sell")'>Sell</button><br/>
 	</li>
 	<% } %>
       </ol>
@@ -80,20 +79,43 @@
       <script>
 	function act(company, action) {
 	  document.getElementById("status").innerHTML = "Requesting transaction...";
-	  var url = location.origin + "/StockMarketSimulator/simulate?action=" + action + "&company=" + company;
+	  var url = location.origin + "/StockMarketSimulator/restful/stocks/" + <%= "\"" + user.getName() + "\"" %> + "/" + company;
+	  var body = {};
+	  body.action = action;
           var xmlHttp = new XMLHttpRequest();
-          xmlHttp.open( "GET", url, false ); // false for synchronous request
-          xmlHttp.send( null );
-	  var response = JSON.parse(xmlHttp.responseText);
+          xmlHttp.open( "POST", url, false );
+	  xmlHttp.setRequestHeader("Content-Type", "application/json");
+          xmlHttp.send( JSON.stringify(body) );
+	  var responseText = xmlHttp.responseText;
+	  var response = JSON.parse(responseText);
           var status = response.status;
           if(status == "success") {
-            update(false);
+	    updateBalance(response.balance, response.stockValue);
+            updateCompany(company, response.available, response.averagePurchasePrice, response.owned);
 	    document.getElementById("status").innerHTML = "Transaction successful!";
-	  } else {
-	    alert(status);
+	  } else if(status == "Failed") {
+            alert("The transaction could not be completed.");
             document.getElementById("status").innerHTML = "Transaction failed.";
-	    location.reload();
+	  } else {
+            document.getElementById("status").innerHTML = "Transaction failed.";
+	    reloadPage();
 	  }
+	}
+
+	function updateBalance(balance, stockValue) {
+	  document.getElementById("balance").innerHTML = balance.toFixed(2);
+	  document.getElementById("stockValue").innerHTML = stockValue.toFixed(2);
+	}
+
+	function updateCompany(company, available, average, owned) {
+	  document.getElementById(company + "available").innerHTML = available;
+	  document.getElementById(company + "average").innerHTML = average.toFixed(2);
+	  document.getElementById(company + "owned").innerHTML = owned;
+	}
+
+	function reloadPage() {
+	  alert("An error occurred. Please reload the stock market.");
+          location.reload();
 	}
 
 	function sendToDashboard() {
@@ -101,45 +123,41 @@
 	  window.location.replace(url);
 	}
 	
-	// Write a servlet to respond with JSON with all information for this page
-	// Then use this function to call it, and update the values of the page.
-	//
-	// If updatePrices is true, updates the prices of stocks
-	function update(updatePrices) {
+	function update() {
 	  document.getElementById("status").innerHTML = "Updating...";
-          var url = location.origin + "/StockMarketSimulator/marketUpdate";
-	  if(updatePrices)
-	    url += "?prices=true";
+          var url = location.origin + "/StockMarketSimulator/restful/stocks/" + <%= "\"" + user.getName() + "\"" %>;
           var xmlHttp = new XMLHttpRequest();
-          xmlHttp.open( "GET", url, false ); // false for synchronous request
+          xmlHttp.open( "GET", url, false );
           xmlHttp.send( null );
-	  var response = JSON.parse(xmlHttp.responseText);
-	  if(response.timeout) {
-	    window.location.replace(location.origin + "/StockMarketSimulator/restTimeout");
-          } else if(response.error) {
-	    alert("An error occurred.");
-	    location.reload();
-          } else {
-	    document.getElementById("balance").innerHTML = response.balance.toFixed(2);
-	    document.getElementById("stockValue").innerHTML = response.stockValue.toFixed(2);
-	    var companies = response.companies;
-	    for(var company in companies) {
-	      if(companies.hasOwnProperty(company)) {
-                document.getElementById(company+"price").innerHTML = companies[company].stockValue.toFixed(2);
-	        document.getElementById(company+"available").innerHTML = companies[company].available;
-	        document.getElementById(company+"average").innerHTML = companies[company].averagePrice.toFixed(2);
-	        document.getElementById(company+"owned").innerHTML = companies[company].owned;
-	      }
+	  if(xmlHttp.status !== 200) {
+	    reloadPage();
+	  } else {
+            var companies = JSON.parse(xmlHttp.responseText);
+	    for(var symbol in companies) {
+	      var company = companies[symbol];
+              document.getElementById(symbol+"price").innerHTML = company.price.toFixed(2);
+              updateCompany(symbol, company.available, company.averagePurchasePrice, company.stocks);
 	    }
 	  }
-	  document.getElementById("status").innerHTML = "Update complete.";
+	  var url = location.origin + "/StockMarketSimulator/restful/users/" + <%= "\"" + user.getName() + "\"" %>;
+	  xmlHttp.open( "GET", url, false);
+	  xmlHttp.send( null );
+	  if(xmlHttp.status !== 200) {
+	    reloadPage():
+	  } else {
+// UNCOMMENT AND TEST THIS STUFF WHEN TOTTI'S CODE IS PUSHED
+//	    var user = JSON.parse(xmlHttp.responseText);
+//	    document.getElementById("balance").innerHTML = user.money.toFixed(2);
+//	    document.getElementById("stockValue").innerHTML = user.stockValue.toFixed(2);
+	  }
+	  document.getElementById("status").innerHTML = "Update Complete.";
 	}
 
-	update(true);
+	update();
 
 	// update stock prices every ten seconds
 	setInterval(function() {
-	  update(true);
+	  update();
 	}, 10000);
 	
       </script>

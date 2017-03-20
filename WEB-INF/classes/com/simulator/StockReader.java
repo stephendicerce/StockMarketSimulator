@@ -11,8 +11,17 @@ import org.json.JSONArray;
 
 public class StockReader {
     private static final String BASE_URL = "http://finance.google.com/finance/info?client=ig&q=NASDAQ:";
+    private static long previousUpdateTime = 0;
 
     public static void updateStocks(String[] symbols) {
+	long currentTime = System.currentTimeMillis();
+	
+	// Don't update more than once every ten seconds
+	if(currentTime - previousUpdateTime > 10000)
+	    previousUpdateTime = currentTime;
+	else
+	    return;
+
 	String urlString = BASE_URL;
 	URL url = null;
 	HttpURLConnection connection = null;

@@ -11,23 +11,15 @@ import java.io.InputStreamReader;
 import java.io.InputStream;
 import java.io.IOException;
 
-// Plain old Java Object it does not extend as class or implements
-// an interface
-
-// The class registers its methods for the HTTP GET request using the @GET annotation.
-// Using the @Produces annotation, it defines that it can deliver several MIME types,
-// text, XML and HTML.
-
-// The browser requests per default the HTML MIME type.
-
-//Sets the path to base URL + /companies/{symbol}
 @Path("/companies/{symbol}")
     public class CompanyRest {
 
 	@GET
 	    @Produces(MediaType.APPLICATION_JSON)
 	    public Response getCompany( @PathParam("symbol") String sym ) {
-
+	    
+	    updatePrices();
+	    
 	    com.simulator.Company c = com.simulator.Company.getCompanyBySymbol(sym);
 	    if(c == null) {
 		return Response.status(Response.Status.NOT_FOUND).build();
@@ -93,5 +85,15 @@ import java.io.IOException;
 	    json += "  \"availableStocks\": " + c.getNumberOfAvailableStocks() + "\n";
 	    json += "}";
 	    return json;
+	}
+
+	// Updates the stock prices of the companies.
+	public void updatePrices() {
+	    com.simulator.Company[] companies = com.simulator.Company.getCompanies();
+	    String[] symbols = new String[companies.length];
+	    for(int i=0, length=companies.length; i<length; ++i) {
+		symbols[i] = companies[i].getSymbol();
+	    }
+	    com.simulator.StockReader.updateStocks(symbols);
 	}
     }

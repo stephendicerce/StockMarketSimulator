@@ -4,6 +4,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.simulator.Company;
+import com.simulator.StockReader;
 import org.json.JSONObject;
 import org.json.JSONException;
 import java.io.BufferedReader;
@@ -17,6 +18,9 @@ import java.io.IOException;
 	@GET
 	    @Produces(MediaType.APPLICATION_JSON)
 	    public Response getCompanies() {
+
+	    updatePrices();
+
 	    com.simulator.Company[] companies = com.simulator.Company.getCompanies();
 	    if(companies == null)
 		return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -74,5 +78,14 @@ import java.io.IOException;
 	    }
 	    return Response.status(Response.Status.CREATED).build();
 	}
-	
+
+	// Updates the stock prices of the companies.
+	public void updatePrices() {
+	    com.simulator.Company[] companies = com.simulator.Company.getCompanies();
+	    String[] symbols = new String[companies.length];
+	    for(int i=0, length=companies.length; i<length; ++i) {
+		symbols[i] = companies[i].getSymbol();
+	    }
+	    com.simulator.StockReader.updateStocks(symbols);
+	}
     }
